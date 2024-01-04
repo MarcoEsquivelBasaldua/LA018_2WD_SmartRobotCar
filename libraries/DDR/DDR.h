@@ -5,8 +5,7 @@
 *
 *  brief: Commands used for DDR (Differential Driven Robot) using the L298N module.
 *
-*  Inputs:  ENS -> ENA and ENB
-*           INS -> IN1, IN2, IN3, IN4
+*  Inputs:  INS -> IN1, IN2, IN3, IN4
 *
 *  Outputs: None
 ******************************************************************************/
@@ -17,7 +16,6 @@
 #include "../typeDefs/typeDefs.h"
 
 typedef struct Wheel{
-	uint8 EN;
 	uint8 IN1;
 	uint8 IN2;
 } Wheel; // End Wheel

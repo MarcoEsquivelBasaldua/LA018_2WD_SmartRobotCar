@@ -7,8 +7,7 @@
 *
 *  Inputs: None
 *
-*  Outputs: ENS -> ENA and ENB
-*           INS -> IN1, IN2, IN3, IN4
+*  Outputs: INS -> IN1, IN2, IN3, IN4
 ******************************************************************************/
 #include "Arduino.h"
 #include "DDR.h"
@@ -16,12 +15,10 @@
 DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 {
 	/* Left Wheel */
-	pinMode(LEFTWHEEL.EN , OUTPUT);
 	pinMode(LEFTWHEEL.IN1, OUTPUT);
 	pinMode(LEFTWHEEL.IN2, OUTPUT);
 
 	/* Rigth Wheel */
-	pinMode(RIGHTWHEEL.EN , OUTPUT);
 	pinMode(RIGHTWHEEL.IN1, OUTPUT);
 	pinMode(RIGHTWHEEL.IN2, OUTPUT);
 
@@ -37,24 +34,20 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: rigth wheel enabled to vel
-*           left wheel enabled to vel
-*           left wheel command to HIGH
-*           left wheel command to LOW
-*           left wheel command to HIGH
-*           left wheel command to LOW
+*  Outputs: left wheel command to vel
+*           left wheel command to 0
+*           left wheel command to vel
+*           left wheel command to 0
 **********************************************************/
 void DDR::forward(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite (rightWheel.EN , vel );
-  	digitalWrite(rightWheel.IN1, HIGH);
- 	digitalWrite(rightWheel.IN2, LOW );
+  	analogWrite(rightWheel.IN1, vel);
+ 	analogWrite(rightWheel.IN2, 0 );
 
  	// left wheel
- 	analogWrite (leftWheel.EN , vel );
- 	digitalWrite(leftWheel.IN1, HIGH);
- 	digitalWrite(leftWheel.IN2, LOW );
+ 	analogWrite(leftWheel.IN1, vel);
+ 	analogWrite(leftWheel.IN2, 0 );
 }
 
 /**********************************************************
@@ -64,24 +57,20 @@ void DDR::forward(uint8 const vel)
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: rigth wheel enabled
-*           left wheel enabled to vel
-*           left wheel command to LOW
-*           left wheel command to LOW
-*           left wheel command to HIGH
-*           left wheel command to LOW
+*  Outputs: left wheel command to 0
+*           left wheel command to 0
+*           left wheel command to vel
+*           left wheel command to 0
 **********************************************************/
 void DDR::turnRight(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite (rightWheel.EN , 255);
-  	digitalWrite(rightWheel.IN1, LOW);
- 	digitalWrite(rightWheel.IN2, LOW);
+  	analogWrite(rightWheel.IN1, 0);
+ 	analogWrite(rightWheel.IN2, 0);
 
  	// left wheel
- 	analogWrite (leftWheel.EN , vel );
- 	digitalWrite(leftWheel.IN1, HIGH);
- 	digitalWrite(leftWheel.IN2, LOW );
+ 	analogWrite(leftWheel.IN1, vel);
+ 	analogWrite(leftWheel.IN2, 0 );
 }
 
 /**********************************************************
@@ -91,24 +80,20 @@ void DDR::turnRight(uint8 const vel)
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: rigth wheel enabled to vel
-*           left wheel enabled
-*           left wheel command to HIGH
-*           left wheel command to LOW
-*           left wheel command to LOW
-*           left wheel command to LOW
+*  Outputs: left wheel command to vel
+*           left wheel command to 0
+*           left wheel command to 0
+*           left wheel command to 0
 **********************************************************/
 void DDR::turnLeft(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite (rightWheel.EN , vel );
-  	digitalWrite(rightWheel.IN1, HIGH);
- 	digitalWrite(rightWheel.IN2, LOW );
+  	analogWrite(rightWheel.IN1, vel);
+ 	analogWrite(rightWheel.IN2, 0 );
 
  	// left wheel
- 	analogWrite (leftWheel.EN , 255);
- 	digitalWrite(leftWheel.IN1, LOW);
- 	digitalWrite(leftWheel.IN2, LOW);
+ 	analogWrite(leftWheel.IN1, 0);
+ 	analogWrite(leftWheel.IN2, 0);
 }
 
 /**********************************************************
@@ -118,24 +103,21 @@ void DDR::turnLeft(uint8 const vel)
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: rigth wheel enabled to vel
-*           left wheel enabled to vel
-*           left wheel command to LOW
-*           left wheel command to HIGH
-*           left wheel command to HIGH
-*           left wheel command to LOW
+*  Outputs: left wheel enabled to vel
+*           left wheel command to 0
+*           left wheel command to vel
+*           left wheel command to vel
+*           left wheel command to 0
 **********************************************************/
 void DDR::turnRightFast(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite (rightWheel.EN , vel );
-  	digitalWrite(rightWheel.IN1, LOW );
- 	digitalWrite(rightWheel.IN2, HIGH);
+  	analogWrite(rightWheel.IN1, 0 );
+ 	analogWrite(rightWheel.IN2, vel);
 
  	// left wheel
- 	analogWrite (leftWheel.EN , vel );
- 	digitalWrite(leftWheel.IN1, HIGH);
- 	digitalWrite(leftWheel.IN2, LOW );
+ 	analogWrite(leftWheel.IN1, vel);
+ 	analogWrite(leftWheel.IN2, 0 );
 }
 
 /**********************************************************
@@ -145,24 +127,21 @@ void DDR::turnRightFast(uint8 const vel)
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: rigth wheel enabled to vel
-*           left wheel enabled
-*           left wheel command to HIGH
-*           left wheel command to LOW
-*           left wheel command to LOW
-*           left wheel command to LOW
+*  Outputs: left wheel enabled
+*           left wheel command to vel
+*           left wheel command to 0
+*           left wheel command to 0
+*           left wheel command to 0
 **********************************************************/
 void DDR::turnLeftFast(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite (rightWheel.EN , vel );
-  	digitalWrite(rightWheel.IN1, HIGH);
- 	digitalWrite(rightWheel.IN2, LOW );
+  	analogWrite(rightWheel.IN1, vel);
+ 	analogWrite(rightWheel.IN2, 0 );
 
  	// left wheel
- 	analogWrite (leftWheel.EN , vel );
- 	digitalWrite(leftWheel.IN1, LOW );
- 	digitalWrite(leftWheel.IN2, HIGH);
+ 	analogWrite(leftWheel.IN1, 0 );
+ 	analogWrite(leftWheel.IN2, vel);
 }
 
 /**********************************************************
@@ -172,24 +151,20 @@ void DDR::turnLeftFast(uint8 const vel)
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: rigth wheel enabled to vel
-*           left wheel enabled to vel
-*           left wheel command to LOW
-*           left wheel command to HIGH
-*           left wheel command to LOW
-*           left wheel command to HIGH
+*  Outputs: left wheel command to 0
+*           left wheel command to vel
+*           left wheel command to 0
+*           left wheel command to vel
 **********************************************************/
 void DDR::backward(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite (rightWheel.EN , vel );
-  	digitalWrite(rightWheel.IN1, LOW );
- 	digitalWrite(rightWheel.IN2, HIGH);
+  	analogWrite(rightWheel.IN1, 0 );
+ 	analogWrite(rightWheel.IN2, vel);
 
  	// left wheel
- 	analogWrite (leftWheel.EN , vel );
- 	digitalWrite(leftWheel.IN1, LOW );
- 	digitalWrite(leftWheel.IN2, HIGH);
+ 	analogWrite(leftWheel.IN1, 0 );
+ 	analogWrite(leftWheel.IN2, vel);
 }
 
 /**********************************************************
@@ -199,20 +174,15 @@ void DDR::backward(uint8 const vel)
 *
 *  Inputs: None
 *
-*  Outputs: rigth wheel enabled
-*           left wheel enabled
-*           left wheel command to LOW
-*           left wheel command to LOW
-*           left wheel command to LOW
-*           left wheel command to LOW
+*  Outputs: left wheel command to 0
+*           left wheel command to 0
+*           left wheel command to 0
+*           left wheel command to 0
 **********************************************************/
 void DDR::stop()
 {
-	analogWrite(rightWheel.EN , 255);
-	analogWrite(leftWheel.EN  , 255);
-
-	digitalWrite(rightWheel.IN1, LOW);
-	digitalWrite(rightWheel.IN1, LOW);
-	digitalWrite(leftWheel.IN1 , LOW);
-	digitalWrite(leftWheel.IN2 , LOW);
+	analogWrite(rightWheel.IN1, 0);
+	analogWrite(rightWheel.IN1, 0);
+	analogWrite(leftWheel.IN1 , 0);
+	analogWrite(leftWheel.IN2 , 0);
 }
