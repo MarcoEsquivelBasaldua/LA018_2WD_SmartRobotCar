@@ -18,6 +18,7 @@
 typedef struct Wheel{
 	uint8 IN1;
 	uint8 IN2;
+	uint8 SPEED_INTERRUPT;
 } Wheel; // End Wheel
 
 class DDR
@@ -32,9 +33,10 @@ class DDR
 		void turnLeftFast(uint8 vel);
 		void stop();
 
-	private:
 		Wheel leftWheel;
 		Wheel rightWheel;
+	
+	//private:
 };
 
 #endif
