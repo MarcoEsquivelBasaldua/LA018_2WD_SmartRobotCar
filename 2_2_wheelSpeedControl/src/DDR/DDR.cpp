@@ -12,8 +12,8 @@
 #include "DDR.h"
 
 // Global variables for speedometer
-volatile uint16 prevTimeLeft;
-volatile uint16 prevTimeRight;
+volatile uint32 prevTimeLeft;
+volatile uint32 prevTimeRight;
 
 volatile float elapsedTimeLeft;
 volatile float elapsedTimeRight;
@@ -191,6 +191,9 @@ void DDR::stop()
 	analogWrite(rightWheel.IN1, 0);
 	analogWrite(leftWheel.IN1 , 0);
 	analogWrite(leftWheel.IN2 , 0);
+
+	elapsedTimeLeft = ELAPSED_TIME_INIT;
+	elapsedTimeRight = ELAPSED_TIME_INIT;
 }
 
 float DDR::getRPMLeft()
@@ -219,15 +222,12 @@ void ddrInit(DDR const * const ddr)
 	prevTimeLeft = millis();
 	prevTimeRight = millis();
 
-	elapsedTimeLeft = 10000;
-	elapsedTimeRight = 10000;
-
 	/* Set interrupts for speedometers */
 	pinMode(leftWheel.SPEED_INTERRUPT, INPUT_PULLUP);
 	pinMode(rightWheel.SPEED_INTERRUPT, INPUT_PULLUP);
 
 	attachInterrupt(digitalPinToInterrupt(leftWheel.SPEED_INTERRUPT), interruptLeftWheel, FALLING);
-	attachInterrupt(digitalPinToInterrupt(leftWheel.SPEED_INTERRUPT), interruptLeftWheel, FALLING);
+	attachInterrupt(digitalPinToInterrupt(rightWheel.SPEED_INTERRUPT), interruptRightWheel, FALLING);
 
 }
 

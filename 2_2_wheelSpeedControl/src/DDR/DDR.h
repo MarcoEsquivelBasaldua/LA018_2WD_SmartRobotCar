@@ -16,6 +16,7 @@
 #include "../typeDefs/typeDefs.h"
 
 /******************* DEFINES *********************/
+#define  ELAPSED_TIME_INIT  (100000.0f) /* Elapsed time initialization */   
 #define  MILLIS_TO_MINUTES  (1.666e-5)  /* Factor to convert miliseconds to minutes */
 #define  WHEEL_RPM_FACTOR   (0.2f)      /* Factor of distribution of magnets in wheels */
 
