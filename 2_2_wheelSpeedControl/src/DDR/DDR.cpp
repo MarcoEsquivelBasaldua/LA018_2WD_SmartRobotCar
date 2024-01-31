@@ -15,8 +15,8 @@
 volatile uint16 prevTimeLeft;
 volatile uint16 prevTimeRight;
 
-volatile uint16 elapsedTimeLeft;
-volatile uint16 elapsedTimeRight;
+volatile float elapsedTimeLeft;
+volatile float elapsedTimeRight;
 
 DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 {
@@ -193,14 +193,16 @@ void DDR::stop()
 	analogWrite(leftWheel.IN2 , 0);
 }
 
-uint16 DDR::getElapsedTimeLeft()
+float DDR::getRPMLeft()
 {
-	return elapsedTimeLeft;
+	float const RPM = WHEEL_RPM_FACTOR / elapsedTimeLeft;
+	return RPM;
 }
 
-uint16 DDR::getElapsedTimeRight()
+float DDR::getRPMRight()
 {
-	return elapsedTimeRight;
+	float const RPM = WHEEL_RPM_FACTOR / elapsedTimeRight;
+	return RPM;
 }
 
 
@@ -232,13 +234,13 @@ void ddrInit(DDR const * const ddr)
 void interruptLeftWheel()
 {
   uint32 const currentTime = millis();
-  elapsedTimeLeft = currentTime - prevTimeLeft;
+  elapsedTimeLeft = (float)(currentTime - prevTimeLeft) * MILLIS_TO_MINUTES;
   prevTimeLeft = currentTime;
 }
 
 void interruptRightWheel()
 {
   uint32 const currentTime = millis();
-  elapsedTimeRight = currentTime - prevTimeRight;
+  elapsedTimeRight = (float)(currentTime - prevTimeRight) * MILLIS_TO_MINUTES;
   prevTimeRight = currentTime;
 }

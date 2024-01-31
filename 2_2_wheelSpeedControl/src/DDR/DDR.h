@@ -15,6 +15,12 @@
 #include "Arduino.h"
 #include "../typeDefs/typeDefs.h"
 
+/******************* DEFINES *********************/
+#define  MILLIS_TO_MINUTES  (1.666e-5)  /* Factor to convert miliseconds to minutes */
+#define  WHEEL_RPM_FACTOR   (0.2f)      /* Factor of distribution of magnets in wheels */
+
+/*************************************************/
+
 typedef struct Wheel{
 	uint8 IN1;
 	uint8 IN2;
@@ -33,8 +39,8 @@ class DDR
 		void turnRightFast(uint8 vel);
 		void turnLeftFast(uint8 vel);
 		void stop();
-		uint16 getElapsedTimeLeft();
-		uint16 getElapsedTimeRight();
+		float getRPMLeft();
+		float getRPMRight();
 
 	//private:
 		Wheel leftWheel;
