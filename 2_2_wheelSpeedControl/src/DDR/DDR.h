@@ -16,9 +16,11 @@
 #include "../typeDefs/typeDefs.h"
 
 /******************* DEFINES *********************/
-#define  ELAPSED_TIME_INIT  (100000.0f) /* Elapsed time initialization */   
 #define  MILLIS_TO_MINUTES  (1.666e-5)  /* Factor to convert miliseconds to minutes */
 #define  WHEEL_RPM_FACTOR   (0.2f)      /* Factor of distribution of magnets in wheels */
+#define  LPF_Factor         (0.25f)     /* Low Pass Filter factor to smooth RPM signals */
+#define  MIN_RPM            (0.0f)      /* Minimum allowed RPM */   
+#define  MAX_RPM            (170.0)     /* Maximum allowed RPM (determined experimentally) */
 
 /*************************************************/
 
@@ -26,6 +28,7 @@ typedef struct Wheel{
 	uint8 IN1;
 	uint8 IN2;
 	uint8 SPEED_INTERRUPT;
+	float RPM;
 } Wheel; // End Wheel
 
 class DDR
@@ -33,15 +36,14 @@ class DDR
 	public:
 		DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL);
 		void init();
-		void forward(uint8 vel);
-		void backward(uint8 vel);
-		void turnRight(uint8 vel);
-		void turnLeft(uint8 vel);
-		void turnRightFast(uint8 vel);
-		void turnLeftFast(uint8 vel);
+		void forward(uint8 const vel);
+		void backward(uint8 const vel);
+		void turnRight(uint8 const vel);
+		void turnLeft(uint8 const vel);
+		void turnRightFast(uint8 const vel);
+		void turnLeftFast(uint8 const vel);
 		void stop();
-		float getRPMLeft();
-		float getRPMRight();
+		void getRPM();
 
 	//private:
 		Wheel leftWheel;

@@ -54,6 +54,8 @@ void DDR::forward(uint8 const vel)
  	// left wheel
  	analogWrite(leftWheel.IN1, vel);
  	analogWrite(leftWheel.IN2, 0 );
+
+	getRPM();
 }
 
 /**********************************************************
@@ -192,20 +194,22 @@ void DDR::stop()
 	analogWrite(leftWheel.IN1 , 0);
 	analogWrite(leftWheel.IN2 , 0);
 
-	elapsedTimeLeft = ELAPSED_TIME_INIT;
-	elapsedTimeRight = ELAPSED_TIME_INIT;
+	leftWheel.RPM = MIN_RPM;
+	rightWheel.RPM = MIN_RPM;
 }
 
-float DDR::getRPMLeft()
+void DDR::getRPM()
 {
-	float const RPM = WHEEL_RPM_FACTOR / elapsedTimeLeft;
-	return RPM;
-}
+	float const prevLeftRPM = leftWheel.RPM;
+	float const prevRightRPM = rightWheel.RPM;
+	float leftRPM;
+	float rightRPM;
+	
+	leftRPM = LPF_Factor * prevLeftRPM + (1.0 - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeLeft);
+	rightRPM = LPF_Factor * prevRightRPM + 0.(1.0 - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeRight);
 
-float DDR::getRPMRight()
-{
-	float const RPM = WHEEL_RPM_FACTOR / elapsedTimeRight;
-	return RPM;
+	leftWheel.RPM = leftRPM;
+	rightWheel.RPM = rightRPM;
 }
 
 
