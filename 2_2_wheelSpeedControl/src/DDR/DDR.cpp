@@ -5,9 +5,10 @@
 *
 *  brief: Commands used for DDR (Differential Driven Robot) using the L298N module.
 *
-*  Inputs: None
+*  Wire Inputs: Left A3144e Hall effect sensor module : D0 -> DIGITAL 3
+*               Right A3144e Hall effect sensor module : D0 -> DIGITAL 2
 *
-*  Outputs: INS -> IN1, IN2, IN3, IN4
+*  Wire Outputs: L298n Module -> IN1, IN2, IN3, IN4
 ******************************************************************************/
 #include "DDR.h"
 
@@ -34,16 +35,20 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 }
 
 /**********************************************************
-*  Function forward()
+*  Function DDR::forward()
 *
 *  Brief: DDR wheels are set to move forward
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs:  vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: left wheel command to vel
-*           left wheel command to 0
-*           left wheel command to vel
-*           left wheel command to 0
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: right wheel IN1 to vel
+*                right wheel IN2 to 0
+*                left wheel  IN1 to vel
+*                left wheel IN2 to 0
 **********************************************************/
 void DDR::forward(uint8 const vel)
 {
@@ -59,16 +64,20 @@ void DDR::forward(uint8 const vel)
 }
 
 /**********************************************************
-*  Function turnRight()
+*  Function DDR::turnRight()
 *
 *  Brief: DDR wheels are set to turn right
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: left wheel command to 0
-*           left wheel command to 0
-*           left wheel command to vel
-*           left wheel command to 0
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: right wheel IN1 to 0
+*                right wheel IN2 to 0
+*                left wheel IN1 to vel
+*                left wheel IN2 to 0
 **********************************************************/
 void DDR::turnRight(uint8 const vel)
 {
@@ -82,16 +91,20 @@ void DDR::turnRight(uint8 const vel)
 }
 
 /**********************************************************
-*  Function turnLeft()
+*  Function DDR::turnLeft()
 *
 *  Brief: DDR wheels are set to turn left
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: left wheel command to vel
-*           left wheel command to 0
-*           left wheel command to 0
-*           left wheel command to 0
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: right wheel IN1 to vel
+*                right wheel IN2 to 0
+*                left wheel IN1 to 0
+*                left wheel IN2 to 0
 **********************************************************/
 void DDR::turnLeft(uint8 const vel)
 {
@@ -105,17 +118,20 @@ void DDR::turnLeft(uint8 const vel)
 }
 
 /**********************************************************
-*  Function turnRightFast()
+*  Function DDR::turnRightFast()
 *
 *  Brief: DDR wheels are set to turn right fast
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: left wheel enabled to vel
-*           left wheel command to 0
-*           left wheel command to vel
-*           left wheel command to vel
-*           left wheel command to 0
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: right wheel IN1 to 0
+*                right wheel IN2 to vel
+*                left wheel IN1 to vel
+*                left wheel IN2 to 0
 **********************************************************/
 void DDR::turnRightFast(uint8 const vel)
 {
@@ -129,17 +145,20 @@ void DDR::turnRightFast(uint8 const vel)
 }
 
 /**********************************************************
-*  Function turnLeftFast()
+*  Function DDR::turnLeftFast()
 *
 *  Brief: DDR wheels are set to turn left
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: left wheel enabled
-*           left wheel command to vel
-*           left wheel command to 0
-*           left wheel command to 0
-*           left wheel command to 0
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: right wheel IN1 to vel
+*                right wheel IN2 to 0
+*                left wheel IN1 to 0
+*                left wheel IN2 to 0
 **********************************************************/
 void DDR::turnLeftFast(uint8 const vel)
 {
@@ -153,16 +172,20 @@ void DDR::turnLeftFast(uint8 const vel)
 }
 
 /**********************************************************
-*  Function backward()
+*  Function DDR::backward()
 *
 *  Brief: DDR wheels are set to move backward
 *
 *  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
 *
-*  Outputs: left wheel command to 0
-*           left wheel command to vel
-*           left wheel command to 0
-*           left wheel command to vel
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: right wheel IN1 to 0
+*                right wheel IN2 to vel
+*                left wheel IN1 to 0
+*                left wheel IN2 to vel
 **********************************************************/
 void DDR::backward(uint8 const vel)
 {
@@ -176,16 +199,20 @@ void DDR::backward(uint8 const vel)
 }
 
 /**********************************************************
-*  Function stop()
+*  Function DDR::stop()
 *
 *  Brief: DDR wheels are stopped
 *
 *  Inputs: None
 *
-*  Outputs: left wheel command to 0
-*           left wheel command to 0
-*           left wheel command to 0
-*           left wheel command to 0
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: right wheel IN1 to 0
+*                right wheel IN2 to 0
+*                left wheel IN1 to 0
+*                left wheel IN2 to 0
 **********************************************************/
 void DDR::stop()
 {
@@ -198,6 +225,19 @@ void DDR::stop()
 	rightWheel.RPM = MIN_RPM;
 }
 
+/**********************************************************
+*  Function DDR::getRPM()
+*
+*  Brief: Updates each wheel speed by applying a Low Pass Filter
+*
+*  Inputs: None
+*
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: None
+**********************************************************/
 void DDR::getRPM()
 {
 	float const prevLeftRPM = leftWheel.RPM;
@@ -206,13 +246,28 @@ void DDR::getRPM()
 	float rightRPM;
 	
 	leftRPM = LPF_Factor * prevLeftRPM + (1.0 - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeLeft);
-	rightRPM = LPF_Factor * prevRightRPM + 0.(1.0 - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeRight);
+	rightRPM = LPF_Factor * prevRightRPM + (1.0 - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeRight);
 
 	leftWheel.RPM = leftRPM;
 	rightWheel.RPM = rightRPM;
 }
 
-
+/**********************************************************
+*  Function ddrInit()
+*
+*  Brief: DDR initialization (to be excecuted in void setup()):
+*           - Stop DDR
+*           - Initialize speedometer variables
+*           - Set interrupts for speedometers
+*
+*  Inputs: None
+*
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: None
+**********************************************************/
 void ddrInit(DDR const * const ddr)
 {
 	/* Stop vehicle */
@@ -235,6 +290,20 @@ void ddrInit(DDR const * const ddr)
 
 }
 
+/**********************************************************
+*  Function interruptLeftWheel()
+*
+*  Brief: Interrupt function for left Hall effect sensor.
+*         Saves elapsed time in minutes between detections.
+*
+*  Inputs: None
+*
+*  Outputs: None
+*
+*  Wire Inputs: Left A3144e : D0 -> DIGITAL 3
+*
+*  Wire Outputs: None
+**********************************************************/
 void interruptLeftWheel()
 {
   uint32 const currentTime = millis();
@@ -242,6 +311,20 @@ void interruptLeftWheel()
   prevTimeLeft = currentTime;
 }
 
+/**********************************************************
+*  Function interruptRightWheel()
+*
+*  Brief: Interrupt function for right Hall effect sensor.
+*         Saves elapsed time in minutes between detections.
+*
+*  Inputs: None
+*
+*  Outputs: None
+*
+*  Wire Inputs: Right A3144e : D0 -> DIGITAL 2
+*
+*  Wire Outputs: None
+**********************************************************/
 void interruptRightWheel()
 {
   uint32 const currentTime = millis();
