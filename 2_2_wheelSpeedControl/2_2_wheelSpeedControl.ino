@@ -26,9 +26,9 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   //float inSignal = analogRead(0);
-  ddr.forward(100);
-  float leftRPM = ddr.leftWheel.RPM;
-  float rightRPM = ddr.rightWheel.RPM;
+  ddr.forward(MIN_RPM);
+  uint8 leftRPM = ddr.leftWheel.RPM;
+  uint8 rightRPM = ddr.rightWheel.RPM;
   
   //elapsedTimeLeft = ddr.getRPMLeft();
   //elapsedTimeRight = ddr.getRPMRight();

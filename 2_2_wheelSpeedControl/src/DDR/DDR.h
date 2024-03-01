@@ -19,8 +19,9 @@
 #define  MILLIS_TO_MINUTES  (1.666e-5)  /* Factor to convert miliseconds to minutes */
 #define  WHEEL_RPM_FACTOR   (0.2f)      /* Factor of distribution of magnets in wheels */
 #define  LPF_Factor         (0.25f)     /* Low Pass Filter factor to smooth RPM signals */
-#define  MIN_RPM            (0.0f)      /* Minimum allowed RPM */   
-#define  MAX_RPM            (170.0)     /* Maximum allowed RPM (determined experimentally) */
+#define  STOP_RPM           (0.0f)      /* RPM when stop */
+#define  MIN_RPM             (60u)      /* Minimum allowed RPM (determined experimentally) */
+#define  MAX_RPM            (170u)      /* Maximum allowed RPM (determined experimentally) */
 
 /*************************************************/
 
@@ -28,7 +29,7 @@ typedef struct Wheel{
 	uint8 IN1;
 	uint8 IN2;
 	uint8 SPEED_INTERRUPT;
-	float RPM;
+	uint8 RPM;
 } Wheel; // End Wheel
 
 class DDR

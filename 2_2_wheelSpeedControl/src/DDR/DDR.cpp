@@ -240,13 +240,13 @@ void DDR::stop()
 **********************************************************/
 void DDR::getRPM()
 {
-	float const prevLeftRPM = leftWheel.RPM;
-	float const prevRightRPM = rightWheel.RPM;
-	float leftRPM;
-	float rightRPM;
+	uint8 const prevLeftRPM = leftWheel.RPM;
+	uint8 const prevRightRPM = rightWheel.RPM;
+	uint8 leftRPM;
+	uint8 rightRPM;
 	
-	leftRPM = LPF_Factor * prevLeftRPM + (1.0 - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeLeft);
-	rightRPM = LPF_Factor * prevRightRPM + (1.0 - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeRight);
+	leftRPM = (uint8)(LPF_Factor * (float)prevLeftRPM + (1.0 - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeLeft));
+	rightRPM = (uint8)(LPF_Factor * (float)prevRightRPM + (1.0 - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeRight));
 
 	leftWheel.RPM = leftRPM;
 	rightWheel.RPM = rightRPM;
