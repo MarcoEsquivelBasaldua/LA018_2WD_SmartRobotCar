@@ -221,8 +221,8 @@ void DDR::stop()
 	analogWrite(leftWheel.IN1 , 0);
 	analogWrite(leftWheel.IN2 , 0);
 
-	leftWheel.RPM = MIN_RPM;
-	rightWheel.RPM = MIN_RPM;
+	leftWheel.RPM = STOP_RPM;
+	rightWheel.RPM = STOP_RPM;
 }
 
 /**********************************************************
@@ -260,7 +260,7 @@ void DDR::getRPM()
 *           - Initialize speedometer variables
 *           - Set interrupts for speedometers
 *
-*  Inputs: None
+*  Inputs: * ddr: pointer to ddr object
 *
 *  Outputs: void
 *
