@@ -16,8 +16,8 @@
 volatile uint32 prevTimeLeft;
 volatile uint32 prevTimeRight;
 
-volatile float elapsedTimeLeft;
-volatile float elapsedTimeRight;
+volatile float32 elapsedTimeLeft;
+volatile float32 elapsedTimeRight;
 
 DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 {

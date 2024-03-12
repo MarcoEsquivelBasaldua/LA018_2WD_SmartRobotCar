@@ -26,6 +26,7 @@
 /*************************************************/
 
 typedef struct Wheel{
+	float32 PID_CONSTANTS[3];
 	uint8 IN1;
 	uint8 IN2;
 	uint8 SPEED_INTERRUPT;

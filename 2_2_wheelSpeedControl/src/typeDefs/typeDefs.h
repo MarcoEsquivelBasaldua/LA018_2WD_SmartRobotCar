@@ -13,4 +13,7 @@ typedef int16_t sint16;
 typedef int32_t sint32;
 typedef int64_t sint64;
 
+/* float type */
+typedef float float32;
+
 #endif
