@@ -21,17 +21,34 @@ volatile float32 elapsedTimeRight;
 
 DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 {
-	/* Left Wheel */
+	/* Set Left Wheel outputs */
 	pinMode(LEFTWHEEL.IN1, OUTPUT);
 	pinMode(LEFTWHEEL.IN2, OUTPUT);
 
-	/* Rigth Wheel */
+	/* Set Rigth Wheel outputs */
 	pinMode(RIGHTWHEEL.IN1, OUTPUT);
 	pinMode(RIGHTWHEEL.IN2, OUTPUT);
 
+	/* Stop DDR */
+	analogWrite(LEFTWHEEL.IN1 , 0);
+	analogWrite(LEFTWHEEL.IN2 , 0);
+	analogWrite(RIGHTWHEEL.IN1, 0);
+	analogWrite(RIGHTWHEEL.IN2, 0);
+
+	/* Set interrupts for speedometers */
+	pinMode(LEFTWHEEL.SPEED_INTERRUPT, INPUT_PULLUP);
+	pinMode(RIGHTWHEEL.SPEED_INTERRUPT, INPUT_PULLUP);
+
+	attachInterrupt(digitalPinToInterrupt(LEFTWHEEL.SPEED_INTERRUPT), interruptLeftWheel, FALLING);
+	attachInterrupt(digitalPinToInterrupt(RIGHTWHEEL.SPEED_INTERRUPT), interruptRightWheel, FALLING);
+
+	/* Attach wheels to DDR */
 	leftWheel  = LEFTWHEEL;
 	rightWheel = RIGHTWHEEL;
 
+	/* Initialize speedometer variables */
+	prevTimeLeft = millis();
+	prevTimeRight = millis();
 }
 
 /**********************************************************
@@ -250,44 +267,6 @@ void DDR::getRPM()
 
 	leftWheel.RPM = leftRPM;
 	rightWheel.RPM = rightRPM;
-}
-
-/**********************************************************
-*  Function ddrInit()
-*
-*  Brief: DDR initialization (to be excecuted in void setup()):
-*           - Stop DDR
-*           - Initialize speedometer variables
-*           - Set interrupts for speedometers
-*
-*  Inputs: * ddr: pointer to ddr object
-*
-*  Outputs: void
-*
-*  Wire Inputs: None
-*
-*  Wire Outputs: None
-**********************************************************/
-void ddrInit(DDR const * const ddr)
-{
-	/* Stop vehicle */
-	ddr->stop();
-
-	/* Get left and right wheels */
-	Wheel leftWheel = ddr->leftWheel;
-	Wheel rightWheel = ddr->rightWheel;
-
-	/* Initialize speedometer variables */
-	prevTimeLeft = millis();
-	prevTimeRight = millis();
-
-	/* Set interrupts for speedometers */
-	pinMode(leftWheel.SPEED_INTERRUPT, INPUT_PULLUP);
-	pinMode(rightWheel.SPEED_INTERRUPT, INPUT_PULLUP);
-
-	attachInterrupt(digitalPinToInterrupt(leftWheel.SPEED_INTERRUPT), interruptLeftWheel, FALLING);
-	attachInterrupt(digitalPinToInterrupt(rightWheel.SPEED_INTERRUPT), interruptRightWheel, FALLING);
-
 }
 
 /**********************************************************

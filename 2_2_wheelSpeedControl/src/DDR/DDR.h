@@ -19,8 +19,8 @@
 #define  MILLIS_TO_MINUTES  (1.666e-5)  /* Factor to convert miliseconds to minutes */
 #define  WHEEL_RPM_FACTOR   (0.2f)      /* Factor of distribution of magnets in wheels */
 #define  LPF_Factor         (0.25f)     /* Low Pass Filter factor to smooth RPM signals */
-#define  STOP_RPM           (0.0f)      /* RPM when stop */
-#define  MIN_RPM             (60u)      /* Minimum allowed RPM (determined experimentally) */
+#define  STOP_RPM           (0u)        /* RPM when stop */
+#define  MIN_RPM            (60u)       /* Minimum allowed RPM (determined experimentally) */
 #define  MAX_RPM            (170u)      /* Maximum allowed RPM (determined experimentally) */
 
 /*************************************************/
@@ -51,8 +51,6 @@ class DDR
 		Wheel leftWheel;
 		Wheel rightWheel;
 };
-
-void ddrInit(DDR const * const ddr);
 
 void interruptLeftWheel();
 
