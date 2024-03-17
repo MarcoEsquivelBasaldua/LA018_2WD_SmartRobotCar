@@ -41,18 +41,3 @@ void loop() {
   delay(100);
 }
 
-/*
-void interruptLeftWheel()
-{
-  uint32 const currentTime = millis();
-  elapsedTimeLeft = currentTime - prevTimeLeft;
-  prevTimeLeft = currentTime;
-}
-
-void interruptRightWheel()
-{
-  uint32 const currentTime = millis();
-  elapsedTimeRight = currentTime - prevTimeRight;
-  prevTimeRight = currentTime;
-}
-*/
