@@ -22,6 +22,7 @@
 #define  STOP_RPM           (0u)        /* RPM when stop */
 #define  MIN_RPM            (60u)       /* Minimum allowed RPM (determined experimentally) */
 #define  MAX_RPM            (170u)      /* Maximum allowed RPM (determined experimentally) */
+#define  ONE_F              (1.0f)      /* Constant 1 float*/
 
 /*************************************************/
 

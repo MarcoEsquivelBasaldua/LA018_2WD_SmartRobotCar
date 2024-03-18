@@ -10,18 +10,18 @@ uint8 const interrupts[] = {2, 3};
 Wheel LEFTWHEEL = {left_PID_K[0], left_PID_K[1], left_PID_K[2],
                    ins[0], ins[1],
                    interrupts[1],
-                   0.0};
+                   STOP_RPM};
 Wheel RIGHTWHEEL = {right_PID_K[0], right_PID_K[1], right_PID_K[2],
                     ins[2], ins[3],
                     interrupts[0],
-                    0.0};
+                    STOP_RPM};
 
 DDR ddr(LEFTWHEEL, RIGHTWHEEL);
 
 void setup() {
   // put your setup code here, to run once:
   
-  ddrInit(&ddr);
+  //ddrInit(&ddr);
   //Serial.begin(9600);
 
 }
@@ -37,7 +37,7 @@ void loop() {
   //elapsedTimeRight = ddr.getRPMRight();
 
   //Serial.println(leftRPM);
-  
+
   delay(100);
 }
 
