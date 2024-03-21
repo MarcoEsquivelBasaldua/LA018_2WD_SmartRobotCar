@@ -262,8 +262,8 @@ void DDR::getRPM()
 	uint8 leftRPM;
 	uint8 rightRPM;
 	
-	leftRPM = (uint8)(LPF_Factor * (float)prevLeftRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeLeft));
-	rightRPM = (uint8)(LPF_Factor * (float)prevRightRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeRight));
+	leftRPM = (uint8)(LPF_Factor * (float32)prevLeftRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeLeft));
+	rightRPM = (uint8)(LPF_Factor * (float32)prevRightRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeRight));
 
 	leftWheel.u_velRPM = leftRPM;
 	rightWheel.u_velRPM = rightRPM;
@@ -286,7 +286,7 @@ void DDR::getRPM()
 void interruptLeftWheel()
 {
   uint32 const currentTime = millis();
-  elapsedTimeLeft = (float)(currentTime - prevTimeLeft) * MILLIS_TO_MINUTES;
+  elapsedTimeLeft = (float32)(currentTime - prevTimeLeft) * MILLIS_TO_MINUTES;
   prevTimeLeft = currentTime;
 }
 
@@ -307,6 +307,6 @@ void interruptLeftWheel()
 void interruptRightWheel()
 {
   uint32 const currentTime = millis();
-  elapsedTimeRight = (float)(currentTime - prevTimeRight) * MILLIS_TO_MINUTES;
+  elapsedTimeRight = (float32)(currentTime - prevTimeRight) * MILLIS_TO_MINUTES;
   prevTimeRight = currentTime;
 }
