@@ -28,10 +28,10 @@
 
 typedef struct Wheel{
 	float32 PID_CONSTANTS[3];
-	uint8 IN1;
-	uint8 IN2;
-	uint8 SPEED_INTERRUPT;
-	uint8 RPM;
+	uint8 u_in1;
+	uint8 u_in2;
+	uint8 u_speedInterrupt;
+	uint8 u_velRPM;
 } Wheel; // End Wheel
 
 class DDR

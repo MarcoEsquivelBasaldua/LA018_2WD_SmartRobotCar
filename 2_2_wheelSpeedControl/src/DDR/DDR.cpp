@@ -22,25 +22,25 @@ volatile float32 elapsedTimeRight;
 DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 {
 	/* Set Left Wheel outputs */
-	pinMode(LEFTWHEEL.IN1, OUTPUT);
-	pinMode(LEFTWHEEL.IN2, OUTPUT);
+	pinMode(LEFTWHEEL.u_in1, OUTPUT);
+	pinMode(LEFTWHEEL.u_in2, OUTPUT);
 
 	/* Set Rigth Wheel outputs */
-	pinMode(RIGHTWHEEL.IN1, OUTPUT);
-	pinMode(RIGHTWHEEL.IN2, OUTPUT);
+	pinMode(RIGHTWHEEL.u_in1, OUTPUT);
+	pinMode(RIGHTWHEEL.u_in2, OUTPUT);
 
 	/* Stop DDR */
-	analogWrite(LEFTWHEEL.IN1 , STOP_RPM);
-	analogWrite(LEFTWHEEL.IN2 , STOP_RPM);
-	analogWrite(RIGHTWHEEL.IN1, STOP_RPM);
-	analogWrite(RIGHTWHEEL.IN2, STOP_RPM);
+	analogWrite(LEFTWHEEL.u_in1 , STOP_RPM);
+	analogWrite(LEFTWHEEL.u_in2 , STOP_RPM);
+	analogWrite(RIGHTWHEEL.u_in1, STOP_RPM);
+	analogWrite(RIGHTWHEEL.u_in2, STOP_RPM);
 
 	/* Set interrupts for speedometers */
-	pinMode(LEFTWHEEL.SPEED_INTERRUPT, INPUT_PULLUP);
-	pinMode(RIGHTWHEEL.SPEED_INTERRUPT, INPUT_PULLUP);
+	pinMode(LEFTWHEEL.u_speedInterrupt, INPUT_PULLUP);
+	pinMode(RIGHTWHEEL.u_speedInterrupt, INPUT_PULLUP);
 
-	attachInterrupt(digitalPinToInterrupt(LEFTWHEEL.SPEED_INTERRUPT), interruptLeftWheel, FALLING);
-	attachInterrupt(digitalPinToInterrupt(RIGHTWHEEL.SPEED_INTERRUPT), interruptRightWheel, FALLING);
+	attachInterrupt(digitalPinToInterrupt(LEFTWHEEL.u_speedInterrupt), interruptLeftWheel, FALLING);
+	attachInterrupt(digitalPinToInterrupt(RIGHTWHEEL.u_speedInterrupt), interruptRightWheel, FALLING);
 
 	/* Attach wheels to DDR */
 	leftWheel  = LEFTWHEEL;
@@ -70,12 +70,12 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 void DDR::forward(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite(rightWheel.IN1, vel     );
- 	analogWrite(rightWheel.IN2, STOP_RPM);
+  	analogWrite(rightWheel.u_in1, vel     );
+ 	analogWrite(rightWheel.u_in2, STOP_RPM);
 
  	// left wheel
- 	analogWrite(leftWheel.IN1, vel      );
- 	analogWrite(leftWheel.IN2, STOP_RPM );
+ 	analogWrite(leftWheel.u_in1, vel      );
+ 	analogWrite(leftWheel.u_in2, STOP_RPM );
 
 	getRPM();
 }
@@ -99,12 +99,12 @@ void DDR::forward(uint8 const vel)
 void DDR::turnRight(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite(rightWheel.IN1, STOP_RPM);
- 	analogWrite(rightWheel.IN2, STOP_RPM);
+  	analogWrite(rightWheel.u_in1, STOP_RPM);
+ 	analogWrite(rightWheel.u_in2, STOP_RPM);
 
  	// left wheel
- 	analogWrite(leftWheel.IN1, vel     );
- 	analogWrite(leftWheel.IN2, STOP_RPM);
+ 	analogWrite(leftWheel.u_in1, vel     );
+ 	analogWrite(leftWheel.u_in2, STOP_RPM);
 }
 
 /**********************************************************
@@ -126,12 +126,12 @@ void DDR::turnRight(uint8 const vel)
 void DDR::turnLeft(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite(rightWheel.IN1, vel     );
- 	analogWrite(rightWheel.IN2, STOP_RPM);
+  	analogWrite(rightWheel.u_in1, vel     );
+ 	analogWrite(rightWheel.u_in2, STOP_RPM);
 
  	// left wheel
- 	analogWrite(leftWheel.IN1, STOP_RPM);
- 	analogWrite(leftWheel.IN2, STOP_RPM);
+ 	analogWrite(leftWheel.u_in1, STOP_RPM);
+ 	analogWrite(leftWheel.u_in2, STOP_RPM);
 }
 
 /**********************************************************
@@ -153,12 +153,12 @@ void DDR::turnLeft(uint8 const vel)
 void DDR::turnRightFast(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite(rightWheel.IN1, STOP_RPM);
- 	analogWrite(rightWheel.IN2, vel     );
+  	analogWrite(rightWheel.u_in1, STOP_RPM);
+ 	analogWrite(rightWheel.u_in2, vel     );
 
  	// left wheel
- 	analogWrite(leftWheel.IN1, vel     );
- 	analogWrite(leftWheel.IN2, STOP_RPM);
+ 	analogWrite(leftWheel.u_in1, vel     );
+ 	analogWrite(leftWheel.u_in2, STOP_RPM);
 }
 
 /**********************************************************
@@ -180,12 +180,12 @@ void DDR::turnRightFast(uint8 const vel)
 void DDR::turnLeftFast(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite(rightWheel.IN1, vel     );
- 	analogWrite(rightWheel.IN2, STOP_RPM);
+  	analogWrite(rightWheel.u_in1, vel     );
+ 	analogWrite(rightWheel.u_in2, STOP_RPM);
 
  	// left wheel
- 	analogWrite(leftWheel.IN1, STOP_RPM);
- 	analogWrite(leftWheel.IN2, vel     );
+ 	analogWrite(leftWheel.u_in1, STOP_RPM);
+ 	analogWrite(leftWheel.u_in2, vel     );
 }
 
 /**********************************************************
@@ -207,12 +207,12 @@ void DDR::turnLeftFast(uint8 const vel)
 void DDR::backward(uint8 const vel)
 {
 	// rigth Wheel
-  	analogWrite(rightWheel.IN1, STOP_RPM);
- 	analogWrite(rightWheel.IN2, vel     );
+  	analogWrite(rightWheel.u_in1, STOP_RPM);
+ 	analogWrite(rightWheel.u_in2, vel     );
 
  	// left wheel
- 	analogWrite(leftWheel.IN1, STOP_RPM);
- 	analogWrite(leftWheel.IN2, vel     );
+ 	analogWrite(leftWheel.u_in1, STOP_RPM);
+ 	analogWrite(leftWheel.u_in2, vel     );
 }
 
 /**********************************************************
@@ -233,13 +233,13 @@ void DDR::backward(uint8 const vel)
 **********************************************************/
 void DDR::stop()
 {
-	analogWrite(rightWheel.IN1, STOP_RPM);
-	analogWrite(rightWheel.IN1, STOP_RPM);
-	analogWrite(leftWheel.IN1 , STOP_RPM);
-	analogWrite(leftWheel.IN2 , STOP_RPM);
+	analogWrite(rightWheel.u_in1, STOP_RPM);
+	analogWrite(rightWheel.u_in2, STOP_RPM);
+	analogWrite(leftWheel.u_in1 , STOP_RPM);
+	analogWrite(leftWheel.u_in2 , STOP_RPM);
 
-	leftWheel.RPM = STOP_RPM;
-	rightWheel.RPM = STOP_RPM;
+	leftWheel.u_velRPM = STOP_RPM;
+	rightWheel.u_velRPM = STOP_RPM;
 }
 
 /**********************************************************
@@ -257,16 +257,16 @@ void DDR::stop()
 **********************************************************/
 void DDR::getRPM()
 {
-	uint8 const prevLeftRPM = leftWheel.RPM;
-	uint8 const prevRightRPM = rightWheel.RPM;
+	uint8 const prevLeftRPM = leftWheel.u_velRPM;
+	uint8 const prevRightRPM = rightWheel.u_velRPM;
 	uint8 leftRPM;
 	uint8 rightRPM;
 	
 	leftRPM = (uint8)(LPF_Factor * (float)prevLeftRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeLeft));
 	rightRPM = (uint8)(LPF_Factor * (float)prevRightRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeRight));
 
-	leftWheel.RPM = leftRPM;
-	rightWheel.RPM = rightRPM;
+	leftWheel.u_velRPM = leftRPM;
+	rightWheel.u_velRPM = rightRPM;
 }
 
 /**********************************************************

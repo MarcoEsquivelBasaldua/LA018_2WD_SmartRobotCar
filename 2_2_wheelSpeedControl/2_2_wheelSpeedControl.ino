@@ -22,7 +22,7 @@ void setup() {
   // put your setup code here, to run once:
   
   //ddrInit(&ddr);
-  //Serial.begin(9600);
+  Serial.begin(9600);
 
 }
 
@@ -36,7 +36,7 @@ void loop() {
   //elapsedTimeLeft = ddr.getRPMLeft();
   //elapsedTimeRight = ddr.getRPMRight();
 
-  //Serial.println(leftRPM);
+  Serial.println(leftRPM);
 
   delay(100);
 }
