@@ -52,7 +52,7 @@ class DDR
 {
 	public:
 		DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL);
-		void init();
+		void PIDinit();
 		void forward(uint8 const vel);
 		void backward(uint8 const vel);
 		void turnRight(uint8 const vel);

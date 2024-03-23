@@ -46,9 +46,38 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 	leftWheel  = LEFTWHEEL;
 	rightWheel = RIGHTWHEEL;
 
+	/* Initialize PID variables */
+	PIDinit();
+
 	/* Initialize speedometer variables */
 	prevTimeLeft = millis();
 	prevTimeRight = millis();
+}
+
+/**********************************************************
+*  Function DDR::PIDinit()
+*
+*  Brief: Initialize the used variables for PID implementation
+*
+*  Inputs:  None
+*
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: None
+**********************************************************/
+void DDR::PIDinit()
+{
+	leftWheel.PID_vars.f_cumError = 0.0f;
+	leftWheel.PID_vars.u_prevTime = 0u;
+	leftWheel.PID_vars.s_prevError = 0;
+	leftWheel.PID_vars.u_pidControl = 0u;
+
+	rightWheel.PID_vars.f_cumError = 0.0f;
+	rightWheel.PID_vars.u_prevTime = 0u;
+	rightWheel.PID_vars.s_prevError = 0;
+	rightWheel.PID_vars.u_pidControl = 0u;
 }
 
 /**********************************************************
