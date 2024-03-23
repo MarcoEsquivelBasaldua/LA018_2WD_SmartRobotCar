@@ -55,32 +55,6 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 }
 
 /**********************************************************
-*  Function DDR::PIDinit()
-*
-*  Brief: Initialize the used variables for PID implementation
-*
-*  Inputs:  None
-*
-*  Outputs: void
-*
-*  Wire Inputs: None
-*
-*  Wire Outputs: None
-**********************************************************/
-void DDR::PIDinit()
-{
-	leftWheel.PID_vars.f_cumError = 0.0f;
-	leftWheel.PID_vars.u_prevTime = 0u;
-	leftWheel.PID_vars.s_prevError = 0;
-	leftWheel.PID_vars.u_pidControl = 0u;
-
-	rightWheel.PID_vars.f_cumError = 0.0f;
-	rightWheel.PID_vars.u_prevTime = 0u;
-	rightWheel.PID_vars.s_prevError = 0;
-	rightWheel.PID_vars.u_pidControl = 0u;
-}
-
-/**********************************************************
 *  Function DDR::forward()
 *
 *  Brief: DDR wheels are set to move forward
@@ -98,6 +72,8 @@ void DDR::PIDinit()
 **********************************************************/
 void DDR::forward(uint8 const vel)
 {
+	//getRPM(&leftWheel, elapsedTimeLeft);
+	velPIDcontrol(&leftWheel, elapsedTimeLeft, vel);
 	// rigth Wheel
   	analogWrite(rightWheel.u_in1, vel     );
  	analogWrite(rightWheel.u_in2, STOP_RPM);
@@ -105,8 +81,6 @@ void DDR::forward(uint8 const vel)
  	// left wheel
  	analogWrite(leftWheel.u_in1, vel      );
  	analogWrite(leftWheel.u_in2, STOP_RPM );
-
-	getRPM();
 }
 
 /**********************************************************
@@ -274,9 +248,10 @@ void DDR::stop()
 /**********************************************************
 *  Function DDR::getRPM()
 *
-*  Brief: Updates each wheel speed by applying a Low Pass Filter
+*  Brief: Updates wheel speed by applying a Low Pass Filter
 *
-*  Inputs: None
+*  Inputs: wheel -> Pointer to wheel we want to get speed from
+*          elapsedTime -> Elapsed time measured from interrupts
 *
 *  Outputs: void
 *
@@ -284,18 +259,66 @@ void DDR::stop()
 *
 *  Wire Outputs: None
 **********************************************************/
-void DDR::getRPM()
+void DDR::getRPM(Wheel * const wheel, float32 const elapsedTime)
 {
-	uint8 const prevLeftRPM = leftWheel.u_velRPM;
-	uint8 const prevRightRPM = rightWheel.u_velRPM;
-	uint8 leftRPM;
-	uint8 rightRPM;
+	uint8 const prevRPM = wheel->u_velRPM;
+	uint8 RPM;
 	
-	leftRPM = (uint8)(LPF_Factor * (float32)prevLeftRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeLeft));
-	rightRPM = (uint8)(LPF_Factor * (float32)prevRightRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTimeRight));
+	RPM = (uint8)(LPF_Factor * (float32)prevRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTime));
 
-	leftWheel.u_velRPM = leftRPM;
-	rightWheel.u_velRPM = rightRPM;
+	wheel->u_velRPM = RPM;
+}
+
+/**********************************************************
+*  Function DDR::PIDinit()
+*
+*  Brief: Initialize the used variables for PID implementation
+*
+*  Inputs:  None
+*
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: None
+**********************************************************/
+void DDR::PIDinit()
+{
+	leftWheel.PID_vars.f_cumError = 0.0f;
+	leftWheel.PID_vars.u_prevTime = 0u;
+	leftWheel.PID_vars.s_prevError = 0;
+	leftWheel.PID_vars.u_pidControl = 0u;
+
+	rightWheel.PID_vars.f_cumError = 0.0f;
+	rightWheel.PID_vars.u_prevTime = 0u;
+	rightWheel.PID_vars.s_prevError = 0;
+	rightWheel.PID_vars.u_pidControl = 0u;
+}
+
+/**********************************************************
+*  Function DDR::velPIDcontrol()
+*
+*  Brief: Computes needed control output for a desired wheel speed using PID approach
+*
+*  Inputs: wheel -> Pointer to wheel we want to control
+*          elapsedTime -> Elapsed time measured from interrupts
+*          vel -> Desired vel in RPM
+*
+*  Outputs: Speed control for wheel
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: None
+**********************************************************/
+uint8 DDR::velPIDcontrol(Wheel * const wheel, float32 const elapsedTime, uint8 const desiredVel)
+{
+	getRPM(wheel, elapsedTime);
+	uint32 currentTime = millis();
+	uint32 prevtime = wheel.PID_vars->u_prevTime;
+	float32 elapsedTime = (float32)(currentTime - prevtime);
+	sint16 = (sint16)desiredVel - wheel->u_velRPM;
+
+	return 0;
 }
 
 /**********************************************************

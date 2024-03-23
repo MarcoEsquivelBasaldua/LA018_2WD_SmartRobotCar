@@ -52,7 +52,6 @@ class DDR
 {
 	public:
 		DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL);
-		void PIDinit();
 		void forward(uint8 const vel);
 		void backward(uint8 const vel);
 		void turnRight(uint8 const vel);
@@ -60,9 +59,12 @@ class DDR
 		void turnRightFast(uint8 const vel);
 		void turnLeftFast(uint8 const vel);
 		void stop();
-		void getRPM();
+		
 
 	//private:
+		void PIDinit();
+		void getRPM(Wheel * const wheel, float32 const elapsedTime);
+		uint8 velPIDcontrol(Wheel * const wheel, float32 const elapsedTime, uint8 const desiredVel);
 		Wheel leftWheel;
 		Wheel rightWheel;
 };
