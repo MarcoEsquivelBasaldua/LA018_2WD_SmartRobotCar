@@ -64,7 +64,8 @@ class DDR
 	//private:
 		void PIDinit();
 		void getRPM(Wheel * const wheel, float32 const elapsedTime);
-		uint8 velPIDcontrol(Wheel * const wheel, float32 const elapsedTime, uint8 const desiredVel);
+		void velPIDcontrol(Wheel * const wheel, float32 const speedometerTime, uint8 const desiredVel);
+		
 		Wheel leftWheel;
 		Wheel rightWheel;
 };

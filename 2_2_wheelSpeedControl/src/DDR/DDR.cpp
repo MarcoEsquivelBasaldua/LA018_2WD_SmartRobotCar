@@ -310,13 +310,13 @@ void DDR::PIDinit()
 *
 *  Wire Outputs: None
 **********************************************************/
-uint8 DDR::velPIDcontrol(Wheel * const wheel, float32 const elapsedTime, uint8 const desiredVel)
+void DDR::velPIDcontrol(Wheel * const wheel, float32 const speedometerTime, uint8 const desiredVel)
 {
-	getRPM(wheel, elapsedTime);
+	getRPM(wheel, speedometerTime);
 	uint32 currentTime = millis();
-	uint32 prevtime = wheel.PID_vars->u_prevTime;
+	uint32 prevtime = wheel->PID_vars.u_prevTime;
 	float32 elapsedTime = (float32)(currentTime - prevtime);
-	sint16 = (sint16)desiredVel - wheel->u_velRPM;
+	sint16 error = (sint16)desiredVel - wheel->u_velRPM;
 
 	return 0;
 }
