@@ -84,8 +84,6 @@ void DDR::forward(uint8 const vel)
 	// rigth Wheel
   	analogWrite(rightWheel.u_in1, rightWheel.PID_vars.u_pidControl);
  	analogWrite(rightWheel.u_in2, STOP_RPM);
-
-	return time;
 }
 
 /**********************************************************
