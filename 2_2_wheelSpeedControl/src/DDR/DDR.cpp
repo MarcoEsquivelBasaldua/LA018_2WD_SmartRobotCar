@@ -72,8 +72,8 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 **********************************************************/
 void DDR::forward(uint8 const vel)
 {
-	float32 time = velPIDcontrol(&leftWheel, elapsedTimeLeft, vel);
-	//velPIDcontrol(&rightWheel, elapsedTimeRight, vel);
+	velPIDcontrol(&leftWheel, elapsedTimeLeft, vel);
+	velPIDcontrol(&rightWheel, elapsedTimeRight, vel);
 
 	//getRPM(&leftWheel, elapsedTimeLeft);
 
