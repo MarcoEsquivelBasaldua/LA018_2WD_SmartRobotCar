@@ -75,8 +75,6 @@ void DDR::forward(uint8 const vel)
 	velPIDcontrol(&leftWheel, elapsedTimeLeft, vel);
 	velPIDcontrol(&rightWheel, elapsedTimeRight, vel);
 
-	//getRPM(&leftWheel, elapsedTimeLeft);
-
 	// left wheel
  	analogWrite(leftWheel.u_in1, leftWheel.PID_vars.u_pidControl);
  	analogWrite(leftWheel.u_in2, STOP_RPM );
