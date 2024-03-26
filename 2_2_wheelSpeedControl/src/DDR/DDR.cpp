@@ -46,9 +46,6 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 	leftWheel  = LEFTWHEEL;
 	rightWheel = RIGHTWHEEL;
 
-	/* Initialize PID variables */
-	PIDinit();
-
 	/* Initialize speedometer variables */
 	prevTimeLeft = millis();
 	prevTimeRight = millis();
@@ -72,15 +69,13 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 **********************************************************/
 void DDR::forward(uint8 const vel)
 {
-	velPIDcontrol(&leftWheel, elapsedTimeLeft, vel);
-	velPIDcontrol(&rightWheel, elapsedTimeRight, vel);
 
 	// left wheel
- 	analogWrite(leftWheel.u_in1, leftWheel.PID_vars.u_pidControl);
+ 	analogWrite(leftWheel.u_in1, vel);
  	analogWrite(leftWheel.u_in2, STOP_RPM );
 
 	// rigth Wheel
-  	analogWrite(rightWheel.u_in1, rightWheel.PID_vars.u_pidControl);
+  	analogWrite(rightWheel.u_in1, vel);
  	analogWrite(rightWheel.u_in2, STOP_RPM);
 }
 
@@ -268,83 +263,6 @@ void DDR::getRPM(Wheel * const wheel, float32 const elapsedTime)
 	RPM = (uint8)(LPF_Factor * (float32)prevRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTime));
 
 	wheel->u_velRPM = RPM;
-}
-
-/**********************************************************
-*  Function DDR::PIDinit()
-*
-*  Brief: Initialize the used variables for PID implementation
-*
-*  Inputs:  None
-*
-*  Outputs: void
-*
-*  Wire Inputs: None
-*
-*  Wire Outputs: None
-**********************************************************/
-void DDR::PIDinit()
-{
-	leftWheel.PID_vars.f_cumError = 0.0f;
-	leftWheel.PID_vars.u_prevTime = millis();
-	leftWheel.PID_vars.s_prevError = 0;
-	leftWheel.PID_vars.u_pidControl = 0u;
-
-	rightWheel.PID_vars.f_cumError = 0.0f;
-	rightWheel.PID_vars.u_prevTime = millis();
-	rightWheel.PID_vars.s_prevError = 0;
-	rightWheel.PID_vars.u_pidControl = 0u;
-}
-
-/**********************************************************
-*  Function DDR::velPIDcontrol()
-*
-*  Brief: Computes needed control output for a desired wheel speed using PID approach
-*
-*  Inputs: wheel -> Pointer to wheel we want to control
-*          elapsedTime -> Elapsed time measured from interrupts
-*          vel -> Desired vel in RPM
-*
-*  Outputs: Speed control for wheel
-*
-*  Wire Inputs: None
-*
-*  Wire Outputs: None
-**********************************************************/
-void DDR::velPIDcontrol(Wheel * const wheel, float32 const speedometerTime, uint8 const desiredVel)
-{
-	getRPM(wheel, speedometerTime);
-
-	PID_vars      pid_vars = wheel->PID_vars;
-	PID_ks  const pid_ks = pid_vars.pid_ks;
-	uint32  const currentTime = millis();
-	uint32  const prevtime = pid_vars.u_prevTime;
-	float32 const elapsedTime = (float32)(currentTime - prevtime) * MILLIS_TO_MINUTES;
-	float32       cumError = pid_vars.f_cumError;
-	float32       rateError;
-	float32       pidControl;
-	sint16  const prevError = pid_vars.s_prevError;
-	sint16  const error = (sint16)desiredVel - wheel->u_velRPM;
-
-	cumError += ((float32)error * elapsedTime);
-	rateError = ((float32)(error - prevError) / elapsedTime);
-
-	pidControl = (float32)pid_vars.u_pidControl + 
-	             pid_ks.f_kp * (float32)error   + 
-				 pid_ks.f_ki * cumError         + 
-				 pid_ks.f_kd * rateError;
-
-	/* Bound control output */
-	pidControl = MIN(pidControl, MAX_SPPED_CONTROL);
-	pidControl = MAX(pidControl, MIN_SPPED_CONTROL);
-
-	/* Update pid vars */
-	wheel->PID_vars.f_cumError = cumError;
-	wheel->PID_vars.u_prevTime = currentTime;
-	wheel->PID_vars.s_prevError = error;
-	
-	/* Control output */
-	wheel->PID_vars.u_pidControl = (uint8)pidControl;
 }
 
 /**********************************************************

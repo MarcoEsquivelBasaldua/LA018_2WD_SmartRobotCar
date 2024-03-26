@@ -31,22 +31,7 @@
 
 /*************************************************/
 
-typedef struct PID_ks{
-	float32 f_kp;
-	float32 f_ki;
-	float32 f_kd;
-} PID_ks;
-
-typedef struct PID_vars{
-	PID_ks pid_ks;
-	float32 f_cumError;
-	uint32 u_prevTime;
-	sint16 s_prevError;
-	uint8 u_pidControl;
-} PID_vars;
-
 typedef struct Wheel{
-	PID_vars PID_vars;
 	uint8 u_in1;
 	uint8 u_in2;
 	uint8 u_speedInterrupt;
@@ -67,9 +52,7 @@ class DDR
 		
 
 	//private:
-		void PIDinit();
 		void getRPM(Wheel * const wheel, float32 const elapsedTime);
-		void velPIDcontrol(Wheel * const wheel, float32 const speedometerTime, uint8 const desiredVel);
 		
 		Wheel leftWheel;
 		Wheel rightWheel;
