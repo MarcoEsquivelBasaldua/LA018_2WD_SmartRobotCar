@@ -15,21 +15,40 @@ Wheel RIGHTWHEEL = {ins[2], ins[3],
 DDR ddr(LEFTWHEEL, RIGHTWHEEL);
 
 void setup() {
-  // put your setup code here, to run once:
-  
-  //ddrInit(&ddr);
   Serial.begin(9600);
-
 }
 
 void loop() {
-  ddr.forward(65);
-  uint8 rightRPM = ddr.rightWheel.u_velRPM;
-  uint8 leftRPM = ddr.leftWheel.u_velRPM;
-  Serial.print(leftRPM);
-  Serial.print(",");
-  Serial.println(rightRPM);
+  uint8 speedControl;
+  uint8 leftRPM;
+  uint8 rightRPM;
+  uint8 del = 200;
 
-  delay(100);
+  for(speedControl = MIN_SPPED_CONTROL; speedControl <= MAX_SPPED_CONTROL; speedControl++)
+  {
+    ddr.forward(speedControl);
+
+    rightRPM = ddr.rightWheel.u_velRPM;
+    leftRPM = ddr.leftWheel.u_velRPM;
+    Serial.print(leftRPM);
+    Serial.print(",");
+    Serial.println(rightRPM);
+
+    delay(del);
+  }
+
+  for(speedControl = MAX_SPPED_CONTROL; speedControl >= MIN_SPPED_CONTROL; speedControl--)
+  {
+    ddr.forward(speedControl);
+
+    rightRPM = ddr.rightWheel.u_velRPM;
+    leftRPM = ddr.leftWheel.u_velRPM;
+    Serial.print(leftRPM);
+    Serial.print(",");
+    Serial.println(rightRPM);
+
+    delay(del);
+  }
+  
 }
 
