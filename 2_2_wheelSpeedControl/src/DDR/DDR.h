@@ -23,7 +23,7 @@
 #define  MIN_RPM            (70u)       /* Minimum allowed RPM (determined experimentally) */
 #define  MAX_RPM            (170u)      /* Maximum allowed RPM (determined experimentally) */
 #define  MIN_SPPED_CONTROL  (40u)       /* Minimum allowed wheel output (determined experimentally) */
-#define  MAX_SPPED_CONTROL  (254u)      /* Maximum allowed wheel output (full PWM) */
+#define  MAX_SPPED_CONTROL  (255u)      /* Maximum allowed wheel output (full PWM) */
 #define  ONE_F              (1.0f)      /* Constant 1 float*/
 
 #define  MAX(x,y)           ( ((x)>(y)) ? (x) : (y) ) /* Max function macro */

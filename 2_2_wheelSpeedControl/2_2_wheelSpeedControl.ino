@@ -15,39 +15,36 @@ Wheel RIGHTWHEEL = {ins[2], ins[3],
 DDR ddr(LEFTWHEEL, RIGHTWHEEL);
 
 void setup() {
-  Serial.begin(9600);
 }
 
 void loop() {
-  uint8 speedControl;
-  uint8 leftRPM;
-  uint8 rightRPM;
-  uint8 del = 200;
+  uint16 totalSamples;
+  uint16 index = 0;
+  uint8  samplesPerControl = 10;
+  uint8  deltaControlInput = MAX_SPPED_CONTROL - MIN_SPPED_CONTROL;
+  uint8  del = 100;
+  
+  totalSamples = (uint16)samplesPerControl * (uint16)deltaControlInput;
 
-  for(speedControl = MIN_SPPED_CONTROL; speedControl <= MAX_SPPED_CONTROL; speedControl++)
+  uint8 controlInputs[totalSamples];
+  uint8 speedLeft[totalSamples];
+  uint8 speedRight[totalSamples];
+
+  for(uint8 speedControl = MIN_SPPED_CONTROL; speedControl < MAX_SPPED_CONTROL; speedControl++)
   {
-    ddr.forward(speedControl);
+    for(uint8 sample = 0; sample < totalSamples; sample++)
+    {
+      ddr.forward(speedControl);
 
-    rightRPM = ddr.rightWheel.u_velRPM;
-    leftRPM = ddr.leftWheel.u_velRPM;
-    Serial.print(leftRPM);
-    Serial.print(",");
-    Serial.println(rightRPM);
+      uint8 rightRPM = ddr.rightWheel.u_velRPM;
+      uint8 leftRPM = ddr.leftWheel.u_velRPM;
+      
+      controlInputs[index] = speedControl;
+      speedLeft[index] = leftRPM;
+      speedRight[index++] = rightRPM;
 
-    delay(del);
-  }
-
-  for(speedControl = MAX_SPPED_CONTROL; speedControl >= MIN_SPPED_CONTROL; speedControl--)
-  {
-    ddr.forward(speedControl);
-
-    rightRPM = ddr.rightWheel.u_velRPM;
-    leftRPM = ddr.leftWheel.u_velRPM;
-    Serial.print(leftRPM);
-    Serial.print(",");
-    Serial.println(rightRPM);
-
-    delay(del);
+      delay(del);
+    }
   }
   
 }
