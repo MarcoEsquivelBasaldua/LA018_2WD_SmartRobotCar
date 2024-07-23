@@ -16,15 +16,14 @@
 #include "../typeDefs/typeDefs.h"
 
 /******************* DEFINES *********************/
-#define  MILLIS_TO_MINUTES  (1.666e-5)  /* Factor to convert miliseconds to minutes */
-#define  WHEEL_RPM_FACTOR   (0.2f)      /* Factor of distribution of magnets in wheels */
-#define  LPF_Factor         (0.25f)     /* Low Pass Filter factor to smooth RPM signals */
-#define  STOP_RPM           (0u)        /* RPM when stop */
-#define  MIN_RPM            (70u)       /* Minimum allowed RPM (determined experimentally) */
-#define  MAX_RPM            (170u)      /* Maximum allowed RPM (determined experimentally) */
-#define  MIN_SPPED_CONTROL  (40.0f)     /* Minimum allowed wheel output (determined experimentally) */
-#define  MAX_SPPED_CONTROL  (255.0f)    /* Maximum allowed wheel output (full PWM) */
-#define  ONE_F              (1.0f)      /* Constant 1 float*/
+#define  MILLIS_TO_MINUTES     (1.666e-5)  /* Factor to convert miliseconds to minutes */
+#define  WHEEL_RPM_FACTOR      (0.2f)      /* Factor of distribution of magnets in wheels */
+#define  LPF_Factor            (0.25f)     /* Low Pass Filter factor to smooth RPM signals */
+#define  STOP_RPM              (0u)        /* RPM when stop */
+#define  MIN_SPPED_CONTROL     (40u)     /* Minimum allowed wheel output (determined experimentally) */
+#define  MAX_SPPED_CONTROL     (255u)    /* Maximum allowed wheel output (full PWM) */
+#define  ONE_F                 (1.0f)      /* Constant 1 float*/
+#define  LEFT_WHEEL_VEL_OFFSET (0u)
 
 #define  MAX(x,y)           ( ((x)>(y)) ? (x) : (y) ) /* Max function macro */
 #define  MIN(x,y)           ( ((x)<(y)) ? (x) : (y) ) /* Min function macro */
