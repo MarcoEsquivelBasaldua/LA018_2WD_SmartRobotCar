@@ -12,13 +12,6 @@
 ******************************************************************************/
 #include "DDR.h"
 
-// Global variables for speedometer
-volatile uint32 prevTimeLeft;
-volatile uint32 prevTimeRight;
-
-volatile float32 elapsedTimeLeft;
-volatile float32 elapsedTimeRight;
-
 DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 {
 	/* Set Left Wheel outputs */
@@ -35,20 +28,9 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 	analogWrite(RIGHTWHEEL.u_in1, STOP_RPM);
 	analogWrite(RIGHTWHEEL.u_in2, STOP_RPM);
 
-	/* Set interrupts for speedometers */
-	pinMode(LEFTWHEEL.u_speedInterrupt, INPUT_PULLUP);
-	pinMode(RIGHTWHEEL.u_speedInterrupt, INPUT_PULLUP);
-
-	attachInterrupt(digitalPinToInterrupt(LEFTWHEEL.u_speedInterrupt), interruptLeftWheel, FALLING);
-	attachInterrupt(digitalPinToInterrupt(RIGHTWHEEL.u_speedInterrupt), interruptRightWheel, FALLING);
-
 	/* Attach wheels to DDR */
 	leftWheel  = LEFTWHEEL;
 	rightWheel = RIGHTWHEEL;
-
-	/* Initialize speedometer variables */
-	prevTimeLeft = millis();
-	prevTimeRight = millis();
 }
 
 /**********************************************************
@@ -236,73 +218,4 @@ void DDR::stop()
 	analogWrite(rightWheel.u_in2, STOP_RPM);
 	analogWrite(leftWheel.u_in1 , STOP_RPM);
 	analogWrite(leftWheel.u_in2 , STOP_RPM);
-
-	leftWheel.u_velRPM = STOP_RPM;
-	rightWheel.u_velRPM = STOP_RPM;
-}
-
-/**********************************************************
-*  Function DDR::getRPM()
-*
-*  Brief: Updates wheel speed by applying a Low Pass Filter
-*
-*  Inputs: wheel -> Pointer to wheel we want to get speed from
-*          elapsedTime -> Elapsed time measured from interrupts
-*
-*  Outputs: void
-*
-*  Wire Inputs: None
-*
-*  Wire Outputs: None
-**********************************************************/
-void DDR::getRPM(Wheel * const wheel, float32 const elapsedTime)
-{
-	uint8 const prevRPM = wheel->u_velRPM;
-	uint8 RPM;
-	
-	RPM = (uint8)(LPF_Factor * (float32)prevRPM + (ONE_F - LPF_Factor) * (WHEEL_RPM_FACTOR / elapsedTime));
-
-	wheel->u_velRPM = RPM;
-}
-
-/**********************************************************
-*  Function interruptLeftWheel()
-*
-*  Brief: Interrupt function for left Hall effect sensor.
-*         Saves elapsed time in minutes between detections.
-*
-*  Inputs: None
-*
-*  Outputs: None
-*
-*  Wire Inputs: Left A3144e : D0 -> DIGITAL 3
-*
-*  Wire Outputs: None
-**********************************************************/
-void interruptLeftWheel()
-{
-  uint32 const currentTime = millis();
-  elapsedTimeLeft = (float32)(currentTime - prevTimeLeft) * MILLIS_TO_MINUTES;
-  prevTimeLeft = currentTime;
-}
-
-/**********************************************************
-*  Function interruptRightWheel()
-*
-*  Brief: Interrupt function for right Hall effect sensor.
-*         Saves elapsed time in minutes between detections.
-*
-*  Inputs: None
-*
-*  Outputs: None
-*
-*  Wire Inputs: Right A3144e : D0 -> DIGITAL 2
-*
-*  Wire Outputs: None
-**********************************************************/
-void interruptRightWheel()
-{
-  uint32 const currentTime = millis();
-  elapsedTimeRight = (float32)(currentTime - prevTimeRight) * MILLIS_TO_MINUTES;
-  prevTimeRight = currentTime;
 }

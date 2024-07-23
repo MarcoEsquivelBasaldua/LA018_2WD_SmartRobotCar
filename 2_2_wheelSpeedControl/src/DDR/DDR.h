@@ -34,8 +34,6 @@
 typedef struct Wheel{
 	uint8 u_in1;
 	uint8 u_in2;
-	uint8 u_speedInterrupt;
-	uint8 u_velRPM;
 } Wheel; // End Wheel
 
 class DDR
@@ -51,15 +49,9 @@ class DDR
 		void stop();
 		
 
-	//private:
-		void getRPM(Wheel * const wheel, float32 const elapsedTime);
-		
+	private:
 		Wheel leftWheel;
 		Wheel rightWheel;
 };
-
-void interruptLeftWheel();
-
-void interruptRightWheel();
 
 #endif
