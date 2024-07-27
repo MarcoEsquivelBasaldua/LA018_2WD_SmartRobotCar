@@ -51,12 +51,15 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 **********************************************************/
 void DDR::forward(uint8 const vel)
 {
+	// Get vel offset between whels
+	uint8 u_velOffset = getVelOffset(vel);
+
 	// left wheel
- 	analogWrite(leftWheel.u_in1, vel + LEFT_WHEEL_VEL_OFFSET);
+ 	analogWrite(leftWheel.u_in1, vel);
  	analogWrite(leftWheel.u_in2, STOP_RPM );
 
 	// rigth Wheel
-  	analogWrite(rightWheel.u_in1, vel);
+  	analogWrite(rightWheel.u_in1, vel + u_velOffset);
  	analogWrite(rightWheel.u_in2, STOP_RPM);
 }
 
@@ -83,7 +86,7 @@ void DDR::turnRight(uint8 const vel)
  	analogWrite(rightWheel.u_in2, STOP_RPM);
 
  	// left wheel
- 	analogWrite(leftWheel.u_in1, vel + LEFT_WHEEL_VEL_OFFSET);
+ 	analogWrite(leftWheel.u_in1, vel);
  	analogWrite(leftWheel.u_in2, STOP_RPM);
 }
 
@@ -105,8 +108,11 @@ void DDR::turnRight(uint8 const vel)
 **********************************************************/
 void DDR::turnLeft(uint8 const vel)
 {
+	// Get vel offset between whels
+	uint8 u_velOffset = getVelOffset(vel);
+
 	// rigth Wheel
-  	analogWrite(rightWheel.u_in1, vel     );
+  	analogWrite(rightWheel.u_in1, vel + u_velOffset);
  	analogWrite(rightWheel.u_in2, STOP_RPM);
 
  	// left wheel
@@ -132,12 +138,15 @@ void DDR::turnLeft(uint8 const vel)
 **********************************************************/
 void DDR::turnRightFast(uint8 const vel)
 {
+	// Get vel offset between whels
+	uint8 u_velOffset = getVelOffset(vel);
+
 	// rigth Wheel
   	analogWrite(rightWheel.u_in1, STOP_RPM);
- 	analogWrite(rightWheel.u_in2, vel     );
+ 	analogWrite(rightWheel.u_in2, vel + u_velOffset);
 
  	// left wheel
- 	analogWrite(leftWheel.u_in1, vel + LEFT_WHEEL_VEL_OFFSET);
+ 	analogWrite(leftWheel.u_in1, vel);
  	analogWrite(leftWheel.u_in2, STOP_RPM);
 }
 
@@ -159,13 +168,16 @@ void DDR::turnRightFast(uint8 const vel)
 **********************************************************/
 void DDR::turnLeftFast(uint8 const vel)
 {
+	// Get vel offset between whels
+	uint8 u_velOffset = getVelOffset(vel);
+
 	// rigth Wheel
-  	analogWrite(rightWheel.u_in1, vel     );
+  	analogWrite(rightWheel.u_in1, vel + u_velOffset);
  	analogWrite(rightWheel.u_in2, STOP_RPM);
 
  	// left wheel
  	analogWrite(leftWheel.u_in1, STOP_RPM);
- 	analogWrite(leftWheel.u_in2, vel + LEFT_WHEEL_VEL_OFFSET);
+ 	analogWrite(leftWheel.u_in2, vel);
 }
 
 /**********************************************************
@@ -186,13 +198,16 @@ void DDR::turnLeftFast(uint8 const vel)
 **********************************************************/
 void DDR::backward(uint8 const vel)
 {
+	// Get vel offset between whels
+	uint8 u_velOffset = getVelOffset(vel);
+
 	// rigth Wheel
   	analogWrite(rightWheel.u_in1, STOP_RPM);
- 	analogWrite(rightWheel.u_in2, vel     );
+ 	analogWrite(rightWheel.u_in2, vel + u_velOffset);
 
  	// left wheel
  	analogWrite(leftWheel.u_in1, STOP_RPM);
- 	analogWrite(leftWheel.u_in2, vel + LEFT_WHEEL_VEL_OFFSET);
+ 	analogWrite(leftWheel.u_in2, vel);
 }
 
 /**********************************************************
@@ -217,4 +232,12 @@ void DDR::stop()
 	analogWrite(rightWheel.u_in2, STOP_RPM);
 	analogWrite(leftWheel.u_in1 , STOP_RPM);
 	analogWrite(leftWheel.u_in2 , STOP_RPM);
+}
+
+uint8 getVelOffset(uint8 vel)
+{
+	float f_slope = (TOP_VEL_OFFSET - BOTTOM_VEL_OFFSET)/(MAX_SPPED_CONTROL - MIN_SPPED_CONTROL);
+	float f_offset = f_slope * ((float)vel - MIN_SPPED_CONTROL) + BOTTOM_VEL_OFFSET;
+
+	return (uint8)f_offset;
 }

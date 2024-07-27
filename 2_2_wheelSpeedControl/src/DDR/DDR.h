@@ -16,14 +16,13 @@
 #include "../typeDefs/typeDefs.h"
 
 /******************* DEFINES *********************/
-#define  MILLIS_TO_MINUTES     (1.666e-5)  /* Factor to convert miliseconds to minutes */
-#define  WHEEL_RPM_FACTOR      (0.2f)      /* Factor of distribution of magnets in wheels */
-#define  LPF_Factor            (0.25f)     /* Low Pass Filter factor to smooth RPM signals */
-#define  STOP_RPM              (0u)        /* RPM when stop */
-#define  MIN_SPPED_CONTROL     (40u)     /* Minimum allowed wheel output (determined experimentally) */
-#define  MAX_SPPED_CONTROL     (255u)    /* Maximum allowed wheel output (full PWM) */
-#define  ONE_F                 (1.0f)      /* Constant 1 float*/
-#define  LEFT_WHEEL_VEL_OFFSET (0u)
+#define  TOP_VEL_OFFSET       (8u)
+#define  BOTTOM_VEL_OFFSET    (8u)
+#define  STOP_RPM             (0u)                     /* RPM when stop */
+#define  MIN_SPPED_CONTROL    (50u)                    /* Minimum allowed wheel output (determined experimentally) */
+#define  MAX_SPPED_CONTROL    (255u - TOP_VEL_OFFSET)  /* Maximum allowed wheel output (full PWM) */
+#define  ONE_F                (1.0f)                   /* Constant 1 float*/
+
 
 #define  MAX(x,y)           ( ((x)>(y)) ? (x) : (y) ) /* Max function macro */
 #define  MIN(x,y)           ( ((x)<(y)) ? (x) : (y) ) /* Min function macro */
@@ -52,5 +51,7 @@ class DDR
 		Wheel leftWheel;
 		Wheel rightWheel;
 };
+
+uint8 getVelOffset(uint8 vel);
 
 #endif
