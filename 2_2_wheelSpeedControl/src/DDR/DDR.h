@@ -16,8 +16,8 @@
 #include "../typeDefs/typeDefs.h"
 
 /******************* DEFINES *********************/
-#define  TOP_VEL_OFFSET       (8u)
-#define  BOTTOM_VEL_OFFSET    (8u)
+#define  TOP_VEL_OFFSET       (1u)
+#define  BOTTOM_VEL_OFFSET    (9u)
 #define  STOP_RPM             (0u)                     /* RPM when stop */
 #define  MIN_SPPED_CONTROL    (50u)                    /* Minimum allowed wheel output (determined experimentally) */
 #define  MAX_SPPED_CONTROL    (255u - TOP_VEL_OFFSET)  /* Maximum allowed wheel output (full PWM) */

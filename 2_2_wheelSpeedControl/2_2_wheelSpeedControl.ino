@@ -15,7 +15,7 @@ void setup() {
 
 void loop() {
   uint8 u_speed = (MAX_SPPED_CONTROL - MIN_SPPED_CONTROL) / 2;
-  ddr.forward(u_speed);
+  ddr.forward(60);
   delay(100);
 }
 

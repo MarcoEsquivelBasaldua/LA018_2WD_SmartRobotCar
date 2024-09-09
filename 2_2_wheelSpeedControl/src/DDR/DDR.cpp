@@ -234,10 +234,22 @@ void DDR::stop()
 	analogWrite(leftWheel.u_in2 , STOP_RPM);
 }
 
-uint8 getVelOffset(uint8 vel)
+uint8 getVelOffset(uint8 u_vel)
 {
-	float f_slope = (TOP_VEL_OFFSET - BOTTOM_VEL_OFFSET)/(MAX_SPPED_CONTROL - MIN_SPPED_CONTROL);
-	float f_offset = f_slope * ((float)vel - MIN_SPPED_CONTROL) + BOTTOM_VEL_OFFSET;
+	uint8 u_steps = MAX(TOP_VEL_OFFSET, BOTTOM_VEL_OFFSET) - MIN(TOP_VEL_OFFSET, BOTTOM_VEL_OFFSET) + 1u;
+	uint8 u_deltaVel = (MAX_SPPED_CONTROL - MIN_SPPED_CONTROL) / u_steps;
+	uint8 u_offset = 0u;
+	sint8 s_sign = (TOP_VEL_OFFSET > BOTTOM_VEL_OFFSET) ? (1) : (-1);
 
-	return (uint8)f_offset;
+	for (uint8 i=0; i<u_steps; i++)
+	{
+		if(u_vel < (i+1u)*u_deltaVel)
+		{
+			u_offset = (uint8)(BOTTOM_VEL_OFFSET + (sint8)i*s_sign);
+			break;
+		}
+		u_offset = TOP_VEL_OFFSET;
+	}
+
+	return u_offset;
 }
