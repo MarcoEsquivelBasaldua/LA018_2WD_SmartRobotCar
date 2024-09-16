@@ -3,11 +3,11 @@
 *
 *  Author : Marco Esquivel Basaldua (https://github.com/MarcoEsquivelBasaldua)
 *
-*  brief: Commands used for DDR (Differential Driven Robot) using the L298N module.
+*  Brief: Commands used for DDR (Differential Driven Robot) using the L298N module.
 *
-*  Inputs:  INS -> IN1, IN2, IN3, IN4
+*  Wire Inputs: None
 *
-*  Outputs: None
+*  Wire Outputs: L298n Module -> IN1, IN2, IN3, IN4
 ******************************************************************************/
 #ifndef DDR_h
 #define DDR_h

@@ -3,10 +3,9 @@
 *
 *  Author : Marco Esquivel Basaldua (https://github.com/MarcoEsquivelBasaldua)
 *
-*  brief: Commands used for DDR (Differential Driven Robot) using the L298N module.
+*  Brief: Commands used for DDR (Differential Driven Robot) using the L298N module.
 *
-*  Wire Inputs: Left A3144e Hall effect sensor module : D0 -> DIGITAL 3
-*               Right A3144e Hall effect sensor module : D0 -> DIGITAL 2
+*  Wire Inputs: None
 *
 *  Wire Outputs: L298n Module -> IN1, IN2, IN3, IN4
 ******************************************************************************/
