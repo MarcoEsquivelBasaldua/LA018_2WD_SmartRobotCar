@@ -38,7 +38,7 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 *
 *  Brief: DDR wheels are set to move forward
 *
-*  Inputs:  vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -68,7 +68,7 @@ void DDR::forward(uint8 const vel)
 *
 *  Brief: DDR wheels are set to turn right
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -95,7 +95,7 @@ void DDR::turnRight(uint8 const vel)
 *
 *  Brief: DDR wheels are set to turn left
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -125,7 +125,7 @@ void DDR::turnLeft(uint8 const vel)
 *
 *  Brief: DDR wheels are set to turn right fast
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -155,7 +155,7 @@ void DDR::turnRightFast(uint8 const vel)
 *
 *  Brief: DDR wheels are set to turn left
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -185,7 +185,7 @@ void DDR::turnLeftFast(uint8 const vel)
 *
 *  Brief: DDR wheels are set to move backward
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
