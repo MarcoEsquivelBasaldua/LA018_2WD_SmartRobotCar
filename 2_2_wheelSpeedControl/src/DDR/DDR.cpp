@@ -234,6 +234,23 @@ void DDR::stop()
 	analogWrite(leftWheel.u_in2 , STOP_RPM);
 }
 
+/**********************************************************
+*  Function getVelOffset()
+*
+*  Brief: On the current robot, left wheel spins faster than
+*         the right wheel when same control is set. This function
+*         helps finding the right control offset so wheels speed
+*         are closer one to the other. Values here used were found
+*         experimentally.
+*
+*  Inputs: [uint8] u_vel: control speed to the wheels.
+*
+*  Outputs: [uint8] control offset for the right wheel.
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: None
+**********************************************************/
 uint8 getVelOffset(uint8 u_vel)
 {
 	uint8 u_steps = MAX(TOP_VEL_OFFSET, BOTTOM_VEL_OFFSET) - MIN(TOP_VEL_OFFSET, BOTTOM_VEL_OFFSET) + 1u;
