@@ -38,7 +38,7 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 *
 *  Brief: DDR wheels are set to move forward
 *
-*  Inputs:  vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -68,7 +68,7 @@ void DDR::forward(uint8 const vel)
 *
 *  Brief: DDR wheels are set to turn right
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -81,13 +81,13 @@ void DDR::forward(uint8 const vel)
 **********************************************************/
 void DDR::turnRight(uint8 const vel)
 {
+	// left wheel
+ 	analogWrite(leftWheel.u_in1, vel);
+ 	analogWrite(leftWheel.u_in2, STOP_RPM);
+
 	// rigth Wheel
   	analogWrite(rightWheel.u_in1, STOP_RPM);
  	analogWrite(rightWheel.u_in2, STOP_RPM);
-
- 	// left wheel
- 	analogWrite(leftWheel.u_in1, vel);
- 	analogWrite(leftWheel.u_in2, STOP_RPM);
 }
 
 /**********************************************************
@@ -95,7 +95,7 @@ void DDR::turnRight(uint8 const vel)
 *
 *  Brief: DDR wheels are set to turn left
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -111,13 +111,13 @@ void DDR::turnLeft(uint8 const vel)
 	// Get vel offset between whels
 	uint8 u_velOffset = getVelOffset(vel);
 
+	// left wheel
+ 	analogWrite(leftWheel.u_in1, STOP_RPM);
+ 	analogWrite(leftWheel.u_in2, STOP_RPM);
+
 	// rigth Wheel
   	analogWrite(rightWheel.u_in1, vel + u_velOffset);
  	analogWrite(rightWheel.u_in2, STOP_RPM);
-
- 	// left wheel
- 	analogWrite(leftWheel.u_in1, STOP_RPM);
- 	analogWrite(leftWheel.u_in2, STOP_RPM);
 }
 
 /**********************************************************
@@ -125,7 +125,7 @@ void DDR::turnLeft(uint8 const vel)
 *
 *  Brief: DDR wheels are set to turn right fast
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -141,13 +141,13 @@ void DDR::turnRightFast(uint8 const vel)
 	// Get vel offset between whels
 	uint8 u_velOffset = getVelOffset(vel);
 
+	// left wheel
+ 	analogWrite(leftWheel.u_in1, vel);
+ 	analogWrite(leftWheel.u_in2, STOP_RPM);
+
 	// rigth Wheel
   	analogWrite(rightWheel.u_in1, STOP_RPM);
  	analogWrite(rightWheel.u_in2, vel + u_velOffset);
-
- 	// left wheel
- 	analogWrite(leftWheel.u_in1, vel);
- 	analogWrite(leftWheel.u_in2, STOP_RPM);
 }
 
 /**********************************************************
@@ -155,7 +155,7 @@ void DDR::turnRightFast(uint8 const vel)
 *
 *  Brief: DDR wheels are set to turn left
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -171,13 +171,13 @@ void DDR::turnLeftFast(uint8 const vel)
 	// Get vel offset between whels
 	uint8 u_velOffset = getVelOffset(vel);
 
+	// left wheel
+ 	analogWrite(leftWheel.u_in1, STOP_RPM);
+ 	analogWrite(leftWheel.u_in2, vel);
+
 	// rigth Wheel
   	analogWrite(rightWheel.u_in1, vel + u_velOffset);
  	analogWrite(rightWheel.u_in2, STOP_RPM);
-
- 	// left wheel
- 	analogWrite(leftWheel.u_in1, STOP_RPM);
- 	analogWrite(leftWheel.u_in2, vel);
 }
 
 /**********************************************************
@@ -185,7 +185,7 @@ void DDR::turnLeftFast(uint8 const vel)
 *
 *  Brief: DDR wheels are set to move backward
 *
-*  Inputs: vel -> desired velocity on the PWM cycle-duty range [0, 255]
+*  Inputs: [uint8] vel: velocity control on the PWM cycle-duty range [0, 255]
 *
 *  Outputs: void
 *
@@ -201,13 +201,13 @@ void DDR::backward(uint8 const vel)
 	// Get vel offset between whels
 	uint8 u_velOffset = getVelOffset(vel);
 
+	// left wheel
+ 	analogWrite(leftWheel.u_in1, STOP_RPM);
+ 	analogWrite(leftWheel.u_in2, vel);
+
 	// rigth Wheel
   	analogWrite(rightWheel.u_in1, STOP_RPM);
  	analogWrite(rightWheel.u_in2, vel + u_velOffset);
-
- 	// left wheel
- 	analogWrite(leftWheel.u_in1, STOP_RPM);
- 	analogWrite(leftWheel.u_in2, vel);
 }
 
 /**********************************************************
@@ -228,12 +228,29 @@ void DDR::backward(uint8 const vel)
 **********************************************************/
 void DDR::stop()
 {
-	analogWrite(rightWheel.u_in1, STOP_RPM);
-	analogWrite(rightWheel.u_in2, STOP_RPM);
 	analogWrite(leftWheel.u_in1 , STOP_RPM);
 	analogWrite(leftWheel.u_in2 , STOP_RPM);
+	analogWrite(rightWheel.u_in1, STOP_RPM);
+	analogWrite(rightWheel.u_in2, STOP_RPM);
 }
 
+/**********************************************************
+*  Function getVelOffset()
+*
+*  Brief: On the current robot, left wheel spins faster than
+*         the right wheel when same control is set. This function
+*         helps finding the right control offset so wheels speed
+*         are closer one to the other. Values here used were found
+*         experimentally.
+*
+*  Inputs: [uint8] u_vel: control speed to the wheels.
+*
+*  Outputs: [uint8] control offset for the right wheel.
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: None
+**********************************************************/
 uint8 getVelOffset(uint8 u_vel)
 {
 	uint8 u_steps = MAX(TOP_VEL_OFFSET, BOTTOM_VEL_OFFSET) - MIN(TOP_VEL_OFFSET, BOTTOM_VEL_OFFSET) + 1u;
