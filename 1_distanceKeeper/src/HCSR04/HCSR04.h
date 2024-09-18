@@ -16,8 +16,12 @@
 #include "../typeDefs/typeDefs.h"
 
 /******************* DEFINES *********************/
-#define  DELAY_TRIGGER  (10u)  /* Delay in ms to allow trigger to be set */
-#define  CM_FACTOR      (59u)  /* Factor to get distance in cm           */
+#define  DELAY_TRIGGER  (10u)  /* Delay in ms to allow trigger to be set    */
+#define  CM_FACTOR      (59u)  /* Factor to get distance in cm              */
+#define  MIN_DIST       ( 2u)  /* Minimum measured distance in cm           */
+#define  MIN_SAFE_DIST  ( 5u)  /* Minium distance keeping a safe threshold  */
+#define  MAX_DIST       (80u)  /* Maximum measured distance in cm           */
+#define  MAX_SAFE_DIST  (70u)  /* Maximum distance keeping a safe threshold */
 /*************************************************/
 
 class HCSR04
