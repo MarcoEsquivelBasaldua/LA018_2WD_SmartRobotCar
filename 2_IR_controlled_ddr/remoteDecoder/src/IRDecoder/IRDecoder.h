@@ -20,20 +20,14 @@
 /*************************************************/
 
 
-
-
 class IRDecoder
 {
     public:
         IRDecoder(uint8 const u_datPin);
         uint32 getCommand();
-
-    private:
-
-        void timerOneConfigForCapture();
 };
 
-//ISR(TIMER1_CAPT_vect);
+void bitReceived();
 
 
 #endif

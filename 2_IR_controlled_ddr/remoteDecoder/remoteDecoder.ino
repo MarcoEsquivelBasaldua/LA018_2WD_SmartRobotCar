@@ -1,6 +1,6 @@
 #include "src/IRDecoder/IRDecoder.h"
 
-IRDecoder IR(8);
+IRDecoder IR(2);
 
 void setup() {
   Serial.begin(115200); //Serial Interface for Debugging
@@ -8,5 +8,11 @@ void setup() {
 }
 
 void loop() {
-  IR.getCommand();
+  uint32 command;
+
+  command = IR.getCommand();
+  if(command)
+  {
+    Serial.println(command, HEX); //Print the value in serial monitor for debugging
+  }
 }
