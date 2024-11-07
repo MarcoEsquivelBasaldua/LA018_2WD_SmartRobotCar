@@ -17,8 +17,16 @@
 #include "../typeDefs/typeDefs.h"
 
 /******************* DEFINES *********************/
+#define DATA_LENGTH          (32u)
+#define LOW_FLAG             (0u)
+#define HIGH_FLAG            (1u)
+#define INIT_COUNTER         (0u)
+#define LOW_DATA             (0u)
+#define HIGH_DATA            (1u)
+#define LOW_DATA_MIN_LIMIT   (1000u)
+#define LOW_DATA_MAX_LIMIT   (1300u)
+#define HIGH_DATA_MAX_LIMIT  (2500u)
 /*************************************************/
-
 
 class IRDecoder
 {
@@ -28,6 +36,5 @@ class IRDecoder
 };
 
 void bitReceived();
-
 
 #endif
