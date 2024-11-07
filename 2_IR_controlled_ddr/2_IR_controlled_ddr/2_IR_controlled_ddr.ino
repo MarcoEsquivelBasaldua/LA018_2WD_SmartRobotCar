@@ -1,13 +1,13 @@
 #include "src/typeDefs/typeDefs.h"
 #include "src/DDR/DDR.h"
-#include "IRremote.hpp"
+#include "src/IRDecoder/IRDecoder.h"
 
 /**************************************************************************************
 *  Wiring
 *    _____________      ________________      __________________      _____________
 *   |            G|<---|GND           5V|--->|ENA           OUT1|--->|             |
 *   |  IR        R|<---|5V            11|--->|IN1               |    | RIGHT WHEEL |
-*   | RECEIVER   Y|--->| 8   ARDUINO  10|--->|IN2   L298N   OUT2|--->|_____________|
+*   | RECEIVER   Y|--->| 2   ARDUINO  10|--->|IN2   L298N   OUT2|--->|_____________|
 *   |_____________|    |       UNO     9|--->|IN3               |     _____________
 *                      |               6|--->|IN4           OUT3|--->|             |
 *                      |              5V|--->|ENB               |    | LEFT WHEEL  |
@@ -30,24 +30,21 @@ DDR ddr(LEFTWHEEL, RIGHTWHEEL);
 //////////////////////////////////////////
 
 //---------------- IR ------------------//
-#define IR_RECEIVE_PIN 8
+#define IR_RECEIVE_PIN 3
 
-#define IR_STOP       (64u)
-#define IR_FORWARD    (70u)
-#define IR_BACKWARD   (21u)
-#define IR_TURNLEFT   (68u)
-#define IR_TURNRIGHT  (67u)
+uint8 u_datPin = 2u;
+
+IRDecoder IR(u_datPin);
 //////////////////////////////////////////
 
 void setup() {
-  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
   ddr.stop();
 }
 
 void loop() {
-  if (IrReceiver.decode()) {
-    uint8 u_command = IrReceiver.decodedIRData.command;
+  uint32 u_command = IR.getCommand();
 
+  if (u_command) {
     switch (u_command)
     {
       case IR_STOP:
@@ -69,7 +66,5 @@ void loop() {
         ddr.stop();
         break;
     }
-    delay(100);
-    IrReceiver.resume();
   }
 }
