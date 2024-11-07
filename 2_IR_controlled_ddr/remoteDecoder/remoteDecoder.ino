@@ -1,6 +1,8 @@
 #include "src/IRDecoder/IRDecoder.h"
 
-IRDecoder IR(2);
+uint8 u_datPin = 2u;
+
+IRDecoder IR(u_datPin);
 
 void setup() {
   Serial.begin(115200); //Serial Interface for Debugging

@@ -6,7 +6,7 @@
 *  brief: Commands used to decode IR signal. Based on the code 
 *         https://github.com/mbabeysekera/advanced-arduino-ir-remote
 *
-*  Inputs:  DAT -> PIN8
+*  Inputs:  DAT -> PIN2
 *
 *  Outputs: None
 ******************************************************************************/
@@ -34,6 +34,19 @@ IRDecoder::IRDecoder(uint8 const u_datPin)
 
 }
 
+/**********************************************************
+*  Function IRDecoder::getCommand()
+*
+*  Brief: Decodes IR recieved data
+*
+*  Inputs:  None
+*
+*  Outputs: [uint32] decoded data recibed stored in unsigned int 32 variable 
+*
+*  Wire Inputs: IR_DATA from IR reciever to u_datPin
+*
+*  Wire Outputs: None
+**********************************************************/
 uint32 IRDecoder::getCommand()
 {
   if (receiveComplete)
@@ -67,6 +80,19 @@ uint32 IRDecoder::getCommand()
   return 0u; //default return value is 0
 }
 
+/**********************************************************
+*  Function bitReceived()
+*
+*  Brief: Interrupt function for IR received data handling
+*
+*  Inputs:  None
+*
+*  Outputs: None
+*
+*  Wire Inputs: IR_DATA from IR reciever to u_datPin
+*
+*  Wire Outputs: None
+**********************************************************/
 void bitReceived()
 {
   uint32 elapsedTime;
@@ -79,11 +105,11 @@ void bitReceived()
     // if value is between 1000 and 1300 (~1.3ms)
     if(elapsedTime > LOW_DATA_MIN_LIMIT && elapsedTime < LOW_DATA_MAX_LIMIT)
     {
-      inputCaptureData[receiveCounter] = LOW_DATA;
+      inputCaptureData[receiveCounter] = HIGH_DATA;
     }
     else
     {
-      inputCaptureData[receiveCounter] = HIGH_DATA;
+      inputCaptureData[receiveCounter] = LOW_DATA;
     }
 
     // if the value is greater than 2500 (~2.5ms), then

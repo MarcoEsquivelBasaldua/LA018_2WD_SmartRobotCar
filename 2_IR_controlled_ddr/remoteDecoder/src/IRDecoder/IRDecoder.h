@@ -6,7 +6,7 @@
 *  brief: Commands used to decode IR signal. Based on the code 
 *         https://github.com/mbabeysekera/advanced-arduino-ir-remote
 *
-*  Inputs:  DAT -> PIN8
+*  Inputs:  DAT -> PIN2
 *
 *  Outputs: None
 ******************************************************************************/
