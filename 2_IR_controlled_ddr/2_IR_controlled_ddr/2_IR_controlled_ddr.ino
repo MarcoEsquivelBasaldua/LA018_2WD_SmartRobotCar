@@ -30,8 +30,6 @@ DDR ddr(LEFTWHEEL, RIGHTWHEEL);
 //////////////////////////////////////////
 
 //---------------- IR ------------------//
-#define IR_RECEIVE_PIN 3
-
 uint8 u_datPin = 2u;
 
 IRDecoder IR(u_datPin);
