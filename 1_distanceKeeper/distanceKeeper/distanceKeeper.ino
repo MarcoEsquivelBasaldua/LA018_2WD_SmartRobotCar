@@ -68,8 +68,8 @@ void loop() {
   uint8 u_minVel = INDOOR_SPEED_CONTROL;   // Min allowed speed
   uint8 u_maxVel = OUTDOOR_SPEED_CONTROL;  // Max allowed spped
   
-  uint8 u_keepDist    = 10u;
-  uint8 u_currentDist = distSensor.measureDistance();
+  uint8 u_keepDist    = 10u;                          // Desired distance
+  uint8 u_currentDist = distSensor.measureDistance(); // Current distance
   sint8 s_error       = (sint8)u_currentDist - (sint8)u_keepDist;
 
   uint8 u_error = (uint8)s_abs(s_error); // Get absolute value of dist error
