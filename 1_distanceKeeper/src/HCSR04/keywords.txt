@@ -1,2 +1,0 @@
-HCSR04		    KEYWORD1
-measureDistance KEYWORD2
