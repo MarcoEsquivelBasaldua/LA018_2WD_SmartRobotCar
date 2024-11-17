@@ -19,7 +19,7 @@ Using the code provided at this project, you would need to wire your components 
 In the **HCSR04** librarie, I measure distances by setting the *trigger* pin to HIGH for 10 $mu$s, then the time the signal takes to come bach is grabbed from the *echo* pin in the *u_timeFlight* variable. This distance in cm is calculated as below.
 
 $$
-    distance = \fr{timeFlight}{59} 
+    distance = \frac{timeFlight}{59} 
 $$
 
 ## Speed control
@@ -35,7 +35,7 @@ $$
                     minVel & if & input < minDist\\
                     maxVel & if & input > minDist\\
                     \fr{maxVel - minVel}{maxDist - minDist} (input - minDist) + minVel & else\\
-                \end{array}\right.
+                \end{array} \right.
 $$
 
 ## Libraries
