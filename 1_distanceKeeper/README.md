@@ -17,6 +17,7 @@ Using the code provided at this project, you would need to wire your components 
 ![HCSR04 ultrasonic sensor](./images/HCSR04.jpg)
 
 In the **HCSR04** librarie, I measure distances by setting the *trigger* pin to HIGH for 10 $mu$s, then the time the signal takes to come bach is grabbed from the *echo* pin in the *u_timeFlight* variable. This distance in cm is calculated as below.
+
 $$
     distance = \fr{timeFlight}{59} 
 $$
@@ -28,6 +29,7 @@ The robot's speed is proportional to the error calculated as the difference betw
 ![Interpolation used for speed](./images/speedInterpolation.png)
 
 The value returned by this interpolation is bounded from 0 to 255 which corresponds tho the PWM Duty Cycle provided to the motor wheels. Calling *minDist* and *maxDist* to the minimum and maximum error values, *minVel* and *maxVel* to the minimum and maximum allowed PWM Duty Cycles, and *input* to the measured error, the duty cycle given to the wheels is measured as
+
 $$
     vel = \left\{ \begin{array}{lcl}
                     minVel & if & input < minDist\\
