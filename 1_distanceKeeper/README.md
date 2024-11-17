@@ -35,7 +35,7 @@ $$
                     minVel & if & input < minDist\\
                     maxVel & if & input > minDist\\
                     \fr{maxVel - minVel}{maxDist - minDist} (input - minDist) + minVel & else\\
-                \end{array} \right.
+                \end{array} \right\.
 $$
 
 ## Libraries
