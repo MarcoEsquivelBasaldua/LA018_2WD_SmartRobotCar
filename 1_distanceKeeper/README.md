@@ -14,8 +14,7 @@ Using the code provided at this project, you would need to wire your components 
 
 ## Distance measurement
 
-<img src="./images/HCSR04.jpg" width="48">
-![HCSR04 ultrasonic sensor](./images/HCSR04.jpg {width=40px height=400px})
+<img src="./images/HCSR04.jpg" width="200">
 
 In the **HCSR04** librarie, I measure distances by setting the *trigger* pin to HIGH for 10 $mu$s, then the time the signal takes to come bach is grabbed from the *echo* pin in the *u_timeFlight* variable. This distance in cm is calculated as below.
 
