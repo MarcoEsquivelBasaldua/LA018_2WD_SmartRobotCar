@@ -145,7 +145,7 @@ uint8 s_mapDist2Vel(uint8 const u_input  ,
     float f_maxVel  = (float)u_maxVel;
     float f_vel;
 
-    float f_slope = (f_maxVel - f_minVel)/(f_maxVel - f_minVel);
+    float f_slope = (f_maxVel - f_minVel)/(f_maxDist - f_minDist);
     f_vel = f_slope * (f_input - f_minDist) + f_minVel;
     return (uint8)f_vel;
   }

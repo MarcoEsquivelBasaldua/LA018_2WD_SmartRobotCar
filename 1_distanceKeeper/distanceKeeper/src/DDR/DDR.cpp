@@ -58,7 +58,7 @@ void DDR::forward(uint8 const vel)
  	analogWrite(leftWheel.u_in2, STOP_RPM );
 
 	// rigth Wheel
-  	analogWrite(rightWheel.u_in1, vel + u_velOffset);
+  	analogWrite(rightWheel.u_in1, vel + 2*u_velOffset);
  	analogWrite(rightWheel.u_in2, STOP_RPM);
 }
 
