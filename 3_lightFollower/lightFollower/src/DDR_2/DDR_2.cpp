@@ -1,5 +1,5 @@
 /******************************************************************************
-*						DDR
+*						DDR_2
 *
 *  Author : Marco Esquivel Basaldua (https://github.com/MarcoEsquivelBasaldua)
 *
