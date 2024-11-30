@@ -9,8 +9,8 @@
 *
 *  Wire Outputs: L298n Module -> IN1, IN2, IN3, IN4
 ******************************************************************************/
-#ifndef DDR_h
-#define DDR_h
+#ifndef DDR2_h
+#define DDR2_h
 
 #include "Arduino.h"
 #include "../typeDefs/typeDefs.h"
@@ -39,12 +39,7 @@ class DDR
 {
 	public:
 		DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL);
-		void forward(uint8 const vel);
-		void backward(uint8 const vel);
-		void turnRight(uint8 const vel);
-		void turnLeft(uint8 const vel);
-		void turnRightFast(uint8 const vel);
-		void turnLeftFast(uint8 const vel);
+		void setVelocities(uint8 const vel);
 		void stop();
 		
 
