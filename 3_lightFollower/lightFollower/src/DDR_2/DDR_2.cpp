@@ -11,7 +11,7 @@
 ******************************************************************************/
 #include "DDR_2.h"
 
-DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
+DDR2::DDR2(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 {
 	/* Set Left Wheel outputs */
 	pinMode(LEFTWHEEL.u_in1, OUTPUT);
@@ -33,7 +33,7 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 }
 
 /**********************************************************
-*  Function DDR::setVelocities()
+*  Function DDR2::setVelocities()
 *
 *  Brief: Velocities to each wheel
 *
@@ -51,11 +51,11 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 *                left wheel  IN1 to vel
 *                left wheel IN2 to 0
 **********************************************************/
-void DDR::setVelocities(sint16 const velLeft, sint16 const velRight)
+void DDR2::setVelocities(sint16 const velLeft, sint16 const velRight)
 {
 	// Get vel offset between whels
-	sint8 s_velLeftSign = s_getSign(velLeft);
-	uint8 u_velOffset = getVelOffset(velLeft);
+	sint8 s_velLeftSign = s_getSign(velRight);
+	uint8 u_velOffset = velOffset(u_abs(velRight));
 
 	if (velLeft > 0u)
 	{
@@ -70,19 +70,19 @@ void DDR::setVelocities(sint16 const velLeft, sint16 const velRight)
 
 	if (velRight > 0u)
 	{
-		analogWrite(rightWheel.u_in1, vel + 2 * s_velLeftSign * u_velOffset);
+		analogWrite(rightWheel.u_in1, velRight + 2 * s_velLeftSign * u_velOffset);
  		analogWrite(rightWheel.u_in2, STOP_RPM);
 	}
 	else
 	{
 		analogWrite(rightWheel.u_in1, STOP_RPM);
- 		analogWrite(rightWheel.u_in2, vel + 2 * s_velLeftSign * u_velOffset);
+ 		analogWrite(rightWheel.u_in2, velRight + 2 * s_velLeftSign * u_velOffset);
 	}
   	
 }
 
 /**********************************************************
-*  Function DDR::stop()
+*  Function DDR2::stop()
 *
 *  Brief: DDR wheels are stopped
 *
@@ -97,7 +97,7 @@ void DDR::setVelocities(sint16 const velLeft, sint16 const velRight)
 *                left wheel IN1 to 0
 *                left wheel IN2 to 0
 **********************************************************/
-void DDR::stop()
+void DDR2::stop()
 {
 	analogWrite(leftWheel.u_in1 , STOP_RPM);
 	analogWrite(leftWheel.u_in2 , STOP_RPM);
@@ -106,7 +106,7 @@ void DDR::stop()
 }
 
 /**********************************************************
-*  Function getVelOffset()
+*  Function velOffset()
 *
 *  Brief: On the current robot, left wheel spins faster than
 *         the right wheel when same control is set. This function
@@ -122,7 +122,7 @@ void DDR::stop()
 *
 *  Wire Outputs: None
 **********************************************************/
-uint8 getVelOffset(uint8 u_vel)
+uint8 velOffset(uint8 u_vel)
 {
 	uint8 u_steps = MAX(TOP_VEL_OFFSET, BOTTOM_VEL_OFFSET) - MIN(TOP_VEL_OFFSET, BOTTOM_VEL_OFFSET) + 1u;
 	uint8 u_deltaVel = (MAX_SPPED_CONTROL - MIN_SPPED_CONTROL) / u_steps;
@@ -143,7 +143,7 @@ uint8 getVelOffset(uint8 u_vel)
 }
 
 /**********************************************************
-*  Function s_abs
+*  Function u_abs
 *
 *  Brief: Returns the absolute value. 
 *         Datatypes are determined according to the ones used 
@@ -155,7 +155,7 @@ uint8 getVelOffset(uint8 u_vel)
 *
 *  Wire Inputs: None
 **********************************************************/
-uint8 s_abs(sint16 const s_value)
+uint8 u_abs(sint16 const s_value)
 {
   if(s_value >= 0)
     return s_value;

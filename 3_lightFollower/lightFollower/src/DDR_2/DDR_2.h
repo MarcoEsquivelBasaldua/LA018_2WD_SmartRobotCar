@@ -35,11 +35,11 @@ typedef struct Wheel{
 	uint8 u_in2;
 } Wheel; // End Wheel
 
-class DDR
+class DDR2
 {
 	public:
-		DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL);
-		void setVelocities(uint8 const vel);
+		DDR2(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL);
+		void setVelocities(sint16 const velLeft, sint16 const velRight);
 		void stop();
 		
 
@@ -48,6 +48,8 @@ class DDR
 		Wheel rightWheel;
 };
 
-uint8 getVelOffset(uint8 vel);
+uint8 velOffset(uint8 vel);
+uint8 u_abs(sint16 const s_value);
+sint8 s_getSign(sint16 const s_value);
 
 #endif
