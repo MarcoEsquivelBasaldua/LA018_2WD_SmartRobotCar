@@ -14,6 +14,7 @@
 
 #include "Arduino.h"
 #include "../typeDefs/typeDefs.h"
+#include "../commonAlgo/commonAlgo.h"
 
 /******************* DEFINES *********************/
 #define  TOP_VEL_OFFSET         (  1u)
@@ -23,11 +24,7 @@
 #define  INDOOR_SPEED_CONTROL   ( 60u)                   /* Desired control for indoor usage                         */
 #define  OUTDOOR_SPEED_CONTROL  (100u)                   /* Desired control for outdoor usage                        */
 #define  MAX_SPPED_CONTROL      (255u - TOP_VEL_OFFSET)  /* Maximum allowed wheel output (full PWM)                  */
-#define  ONE_F                  (1.0f)                   /* Constant 1 float                                         */
-
-#define  MAX(x,y)           ( ((x)>(y)) ? (x) : (y) )  /* Max function macro */
-#define  MIN(x,y)           ( ((x)<(y)) ? (x) : (y) )  /* Min function macro */
-
+#define  ONE_F                  (1.0f)                   /* Constant 1 float
 /*************************************************/
 
 typedef struct Wheel{
