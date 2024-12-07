@@ -1,58 +1,80 @@
-#include <Servo.h>
+//#include <Servo.h>
 
 #include "src/typeDefs/typeDefs.h"
+#include "src/commonAlgo/commonAlgo.h"
+#include "src/DDR_2/DDR_2.h"
+#include "src/myServo/myServo.h"
 
-#define SERVO_PIN       (5U)
-#define SERVO_ERROR     (12u)
+#define SERVO_PIN       (5u)
 #define MIN_ERROR_LIGHT (-50)
 #define MAX_ERROR_LIGHT (50)
 #define MIN_DEGS        (0u)
 #define MAX_DEGS        (180u)
 
-Servo headingServo;
+myServo headingServo(SERVO_PIN);
 
 volatile uint8 prevHeading = 90u;
 const    float lpfFactor = 0.25f;
 
+//----------------- DDR ----------------//
+uint8 const u_ins[] = {11u, 10u, 9u, 6u};
+
+Wheel LEFTWHEEL  = {u_ins[0u], u_ins[1u]};
+Wheel RIGHTWHEEL = {u_ins[2u], u_ins[3u]};
+
+DDR2 ddr(LEFTWHEEL, RIGHTWHEEL);
+//////////////////////////////////////////
+
 void setup()
 {
-  headingServo.attach(SERVO_PIN);
-  setHeading(90u);
+  //headingServo.attach(SERVO_PIN);
+  headingServo.setHeading(90u);
   delay(50);
-  //Serial.begin(9600);
+  Serial.begin(9600);
 }
 
 void loop()
 {
-  //setHeading(90u);
-  uint8 leftSensor = u_mapLight2Percentage(analogRead(0));
-  uint8 rightSensor = u_mapLight2Percentage(analogRead(1));
-  sint8 lightError = rightSensor - leftSensor;
+  /* LDR readings */
+  uint8 leftLDRlevel = u_mapLight2Percentage(analogRead(0));
+  uint8 rightLDRlevel = u_mapLight2Percentage(analogRead(1));
+  sint8 lightError = rightLDRlevel - leftLDRlevel;
 
-  uint8 heading = u_mapLigth2Degs(lightError);
-  heading = (uint8)((1.0f - lpfFactor) * (float)heading + lpfFactor * (float)prevHeading);
-  setHeading(heading);
+  /* Set heading of the robot */
+  sint16 heading = u_mapLigth2Degs(lightError);
+  heading = (sint16)((1.0f - lpfFactor) * (float)heading + lpfFactor * (float)prevHeading);
+  headingServo.setHeading((uint8)heading);
   prevHeading = heading;
+
+  MODE_1(leftLDRlevel, rightLDRlevel);
+
+  /* Get wheels vels */
 /*
   Serial.print("Left lecture: ");
-  Serial.println(leftSensor);
+  Serial.println(leftLDRlevel);
 
   Serial.print("Right lecture: ");
-  Serial.println(rightSensor);
+  Serial.println(rightLDRlevel);
 
   Serial.print("Error: ");
   Serial.println(lightError);
 
   Serial.println("----------------");
 */
-
-  delay(50);
+  //Serial.println(heading);
+  delay(100);
 
 }
 
-void setHeading(uint8 direction)
+void MODE_0()
 {
-  headingServo.write(direction - SERVO_ERROR);
+  ddr.stop();
+}
+
+void MODE_1(uint8 leftLDRlevel, uint8 rightLDRlevel)
+{
+
+  ddr.setVelocities(leftLDRlevel, rightLDRlevel);
 }
 
 /**********************************************************
