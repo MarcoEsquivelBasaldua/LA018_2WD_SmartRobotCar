@@ -13,8 +13,9 @@
 
 myServo headingServo(SERVO_PIN);
 
-volatile uint8 prevHeading = 90u;
-const    float lpfFactor = 0.25f;
+volatile uint8  prevHeading = 90u;
+volatile sint16 heading;
+const    float  lpfFactor = 0.25f;
 
 //----------------- DDR ----------------//
 uint8 const u_ins[] = {11u, 10u, 9u, 6u};
@@ -23,7 +24,11 @@ Wheel LEFTWHEEL  = {u_ins[0u], u_ins[1u]};
 Wheel RIGHTWHEEL = {u_ins[2u], u_ins[3u]};
 
 DDR2 ddr(LEFTWHEEL, RIGHTWHEEL);
-//////////////////////////////////////////
+
+/* LDR reading variables */
+volatile uint8 leftLDRlevel;
+volatile uint8 rightLDRlevel;
+volatile sint8 lightError;
 
 void setup()
 {
@@ -36,17 +41,17 @@ void setup()
 void loop()
 {
   /* LDR readings */
-  uint8 leftLDRlevel = u_mapLight2Percentage(analogRead(0));
-  uint8 rightLDRlevel = u_mapLight2Percentage(analogRead(1));
-  sint8 lightError = rightLDRlevel - leftLDRlevel;
+  leftLDRlevel = u_mapLight2Percentage(analogRead(0));
+  rightLDRlevel = u_mapLight2Percentage(analogRead(1));
+  lightError = rightLDRlevel - leftLDRlevel;
 
   /* Set heading of the robot */
-  sint16 heading = u_mapLigth2Degs(lightError);
+  heading = u_mapLigth2Degs(lightError);
   heading = (sint16)((1.0f - lpfFactor) * (float)heading + lpfFactor * (float)prevHeading);
   headingServo.setHeading((uint8)heading);
   prevHeading = heading;
 
-  MODE_1(leftLDRlevel, rightLDRlevel);
+  MODE_1();
 
   /* Get wheels vels */
 /*
@@ -71,7 +76,7 @@ void MODE_0()
   ddr.stop();
 }
 
-void MODE_1(uint8 leftLDRlevel, uint8 rightLDRlevel)
+void MODE_1()
 {
 
   ddr.setVelocities(leftLDRlevel, rightLDRlevel);
