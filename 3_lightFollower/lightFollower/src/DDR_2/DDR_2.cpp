@@ -57,26 +57,30 @@ void DDR2::setVelocities(sint16 const velLeft, sint16 const velRight)
 	sint8 s_velLeftSign = s_getSign(velRight);
 	uint8 u_velOffset = velOffset(u_abs(velRight));
 
-	if (velLeft > 0u)
+	// Get abs values
+	uint8 abs_velLeft  = u_abs(velLeft);
+	uint8 abs_velRight = u_abs(velRight);
+
+	if (velLeft > 0)
 	{
-		analogWrite(leftWheel.u_in1, velLeft);
+		analogWrite(leftWheel.u_in1, abs_velLeft);
  		analogWrite(leftWheel.u_in2, STOP_RPM );
 	}
 	else
 	{
 		analogWrite(leftWheel.u_in1, STOP_RPM);
- 		analogWrite(leftWheel.u_in2, velLeft);
+ 		analogWrite(leftWheel.u_in2, abs_velLeft);
 	}
 
-	if (velRight > 0u)
+	if (velRight > 0)
 	{
-		analogWrite(rightWheel.u_in1, velRight + 2 * s_velLeftSign * u_velOffset);
+		analogWrite(rightWheel.u_in1, abs_velRight + 2 * s_velLeftSign * u_velOffset);
  		analogWrite(rightWheel.u_in2, STOP_RPM);
 	}
 	else
 	{
 		analogWrite(rightWheel.u_in1, STOP_RPM);
- 		analogWrite(rightWheel.u_in2, velRight + 2 * s_velLeftSign * u_velOffset);
+ 		analogWrite(rightWheel.u_in2, abs_velRight + 2 * s_velLeftSign * u_velOffset);
 	}
   	
 }
