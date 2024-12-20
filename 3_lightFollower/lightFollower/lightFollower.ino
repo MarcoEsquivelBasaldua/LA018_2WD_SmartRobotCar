@@ -3,6 +3,25 @@
 #include "src/DDR_2/DDR_2.h"
 #include "src/myServo/myServo.h"
 
+/**************************************************************************************
+*  Wiring
+*    ______________      ________________      __________________      _____________
+*   |           VCC|<---|5V            5V|--->|ENA           OUT1|--->|             |
+*   | LDR_left   A0|--->|A0            11|--->|IN1               |    | RIGHT WHEEL |
+*   |           GND|<---|GND  ARDUINO  10|--->|IN2   L298N   OUT2|--->|_____________|
+*   |______________|    |       UNO     9|--->|IN3               |     _____________
+*    ______________     |               6|--->|IN4           OUT3|--->|             |
+*   |           VCC|<---|5V            5V|--->|ENB               |    | LEFT WHEEL  |
+*   | LDR_right  A0|--->|A1              |    |              OUT4|--->|_____________|
+*   |           GND|<---|GND             |    |                  |
+*   |______________|    |________________|    |      JUMPER      |
+*                       _________________     |       .-.        |
+*                      |  BATTERY 7.4V  +|--->|VIN               |
+*                      |                -|--->|GND               |
+*                      |_________________|    |__________________|
+*
+***************************************************************************************/
+
 //----------------- Defines ----------------//
 #define SERVO_PIN       (5u)
 #define MIN_ERROR_LIGHT (-50)
@@ -14,8 +33,7 @@
 enum MODES{MODE_0,
            MODE_1,
            MODE_2,
-           MODE_3,
-           MODE_4};
+           MODE_3};
 
 volatile uint8 MODE_current;
 
@@ -75,7 +93,7 @@ void loop()
   }
   else
   {
-    OP_MODE_3();
+    OP_MODE_2();
   }
 
   delay(10);
@@ -97,7 +115,7 @@ void OP_MODE_0()
 }
 
 /**********************************************************
-*  Function OP_MODE_0
+*  Function OP_MODE_1
 *
 *  Brief: Operational Mode 1. DDR moves forward in a straight line.
 *         Wheels velocities are proportional to average value on both
@@ -122,9 +140,31 @@ void OP_MODE_1()
 }
 
 /**********************************************************
-*  Function OP_MODE_0
+*  Function OP_MODE_2
 *
-*  Brief: Operational Mode 2. DDR moves backward in a straight line.
+*  Brief: Operational Mode 2. DDR moves forward. Wheels
+*         velocities are proportional to ligth readings,
+*         on each side.
+*
+*  Inputs: None
+*
+*  Outputs: None
+**********************************************************/
+void OP_MODE_2()
+{
+  /* Map left reading to right wheel speed  and vice versa*/
+  uint8 u_controlSpeedLeft  = u_linearBoundedInterpolation(leftLDRlevel, 0u, 100, (uint8)MIN_SPPED_CONTROL, (uint8)MAX_SPPED_CONTROL);
+  uint8 u_controlSpeedRight = u_linearBoundedInterpolation(rightLDRlevel, 0u, 100, (uint8)MIN_SPPED_CONTROL, (uint8)MAX_SPPED_CONTROL);
+
+  ddr.setVelocities(u_controlSpeedLeft, u_controlSpeedRight);
+
+  MODE_current = MODE_2;
+}
+
+/**********************************************************
+*  Function OP_MODE_3
+*
+*  Brief: Operational Mode 3. DDR moves backward in a straight line.
 *         Wheels velocities are proportional to average value on both
 *         light readings.
 *
@@ -132,7 +172,7 @@ void OP_MODE_1()
 *
 *  Outputs: None
 **********************************************************/
-void OP_MODE_2()
+void OP_MODE_3()
 {
   /* Get average value from light readings*/
   uint8 u_ldrLevelMean = (leftLDRlevel + rightLDRlevel) >> 1;
@@ -143,28 +183,6 @@ void OP_MODE_2()
   /* Set Motor speed to computed control */
   ddr.setVelocities(-((sint16)u_controlSpeed), -((sint16)u_controlSpeed));
   //Serial.println(-((sint16)u_controlSpeed));
-
-  MODE_current = MODE_2;
-}
-
-/**********************************************************
-*  Function OP_MODE_0
-*
-*  Brief: Operational Mode 3. DDR moves forward. Wheels
-*         velocities are proportional to ligth readings,
-*         on each side.
-*
-*  Inputs: None
-*
-*  Outputs: None
-**********************************************************/
-void OP_MODE_3()
-{
-  /* Map left reading to right wheel speed  and vice versa*/
-  uint8 u_controlSpeedLeft  = u_linearBoundedInterpolation(leftLDRlevel, 0u, 100, (uint8)MIN_SPPED_CONTROL, (uint8)MAX_SPPED_CONTROL);
-  uint8 u_controlSpeedRight = u_linearBoundedInterpolation(rightLDRlevel, 0u, 100, (uint8)MIN_SPPED_CONTROL, (uint8)MAX_SPPED_CONTROL);
-
-  ddr.setVelocities(u_controlSpeedLeft, u_controlSpeedRight);
 
   MODE_current = MODE_3;
 }
