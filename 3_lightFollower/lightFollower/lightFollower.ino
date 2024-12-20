@@ -1,16 +1,25 @@
-//#include <Servo.h>
-
 #include "src/typeDefs/typeDefs.h"
 #include "src/commonAlgo/commonAlgo.h"
 #include "src/DDR_2/DDR_2.h"
 #include "src/myServo/myServo.h"
 
+//----------------- Defines ----------------//
 #define SERVO_PIN       (5u)
 #define MIN_ERROR_LIGHT (-50)
 #define MAX_ERROR_LIGHT (50)
 #define MIN_DEGS        (0u)
 #define MAX_DEGS        (180u)
 
+//----------- OPERATIONAL MODES ------------//
+enum MODES{MODE_0,
+           MODE_1,
+           MODE_2,
+           MODE_3,
+           MODE_4};
+
+volatile uint8 MODE_current;
+
+//----------- Servo Heading ------------//
 myServo headingServo(SERVO_PIN);
 
 volatile uint8  prevHeading = 90u;
@@ -32,9 +41,9 @@ volatile sint8 lightError;
 
 void setup()
 {
-  //headingServo.attach(SERVO_PIN);
+  OP_MODE_0();
   headingServo.setHeading(90u);
-  delay(50);
+  delay(500);
   Serial.begin(9600);
 }
 
@@ -51,35 +60,97 @@ void loop()
   headingServo.setHeading((uint8)heading);
   prevHeading = heading;
 
-  MODE_1();
-
-  /* Get wheels vels */
-/*
-  Serial.print("Left lecture: ");
-  Serial.println(leftLDRlevel);
-
-  Serial.print("Right lecture: ");
-  Serial.println(rightLDRlevel);
-
-  Serial.print("Error: ");
-  Serial.println(lightError);
-
-  Serial.println("----------------");
-*/
-  //Serial.println(heading);
-  delay(100);
+  //OP_MODE_3();
+  delay(10);
 
 }
 
-void MODE_0()
+/**********************************************************
+*  Function OP_MODE_0
+*
+*  Brief: Operational Mode 0. DDR is stopped.
+*
+*  Inputs: None
+*
+*  Outputs: None
+**********************************************************/
+void OP_MODE_0()
 {
   ddr.stop();
+  MODE_current = MODE_0;
 }
 
-void MODE_1()
+/**********************************************************
+*  Function OP_MODE_0
+*
+*  Brief: Operational Mode 1. DDR moves forward in a straight line.
+*         Wheels velocities are proportional to average value on both
+*         light readings.
+*
+*  Inputs: None
+*
+*  Outputs: None
+**********************************************************/
+void OP_MODE_1()
 {
+  /* Get average value from light readings*/
+  uint8 u_ldrLevelMean = (leftLDRlevel + rightLDRlevel) >> 1;
 
-  ddr.setVelocities(leftLDRlevel, rightLDRlevel);
+  /* Interpolate light level to valid speed */
+  uint8 u_controlSpeed = u_linearBoundedInterpolation(u_ldrLevelMean, 0u, 100, (uint8)MIN_SPPED_CONTROL, (uint8)MAX_SPPED_CONTROL);
+
+  /* Set Motor speed to computed control */
+  ddr.setVelocities((sint16)u_controlSpeed, (sint16)u_controlSpeed);
+
+  MODE_current = MODE_1;
+}
+
+/**********************************************************
+*  Function OP_MODE_0
+*
+*  Brief: Operational Mode 2. DDR moves backward in a straight line.
+*         Wheels velocities are proportional to average value on both
+*         light readings.
+*
+*  Inputs: None
+*
+*  Outputs: None
+**********************************************************/
+void OP_MODE_2()
+{
+  /* Get average value from light readings*/
+  uint8 u_ldrLevelMean = (leftLDRlevel + rightLDRlevel) >> 1;
+
+  /* Interpolate light level to valid speed */
+  uint8 u_controlSpeed = u_linearBoundedInterpolation(u_ldrLevelMean, 0u, 100, (uint8)MIN_SPPED_CONTROL, (uint8)MAX_SPPED_CONTROL);
+
+  /* Set Motor speed to computed control */
+  ddr.setVelocities(-((sint16)u_controlSpeed), -((sint16)u_controlSpeed));
+  //Serial.println(-((sint16)u_controlSpeed));
+
+  MODE_current = MODE_2;
+}
+
+/**********************************************************
+*  Function OP_MODE_0
+*
+*  Brief: Operational Mode 3. DDR moves forward. Wheels
+*         velocities are proportional to ligth readings,
+*         on each side.
+*
+*  Inputs: None
+*
+*  Outputs: None
+**********************************************************/
+void OP_MODE_3()
+{
+  /* Map left reading to right wheel speed  and vice versa*/
+  uint8 u_controlSpeedLeft  = u_linearBoundedInterpolation(leftLDRlevel, 0u, 100, (uint8)MIN_SPPED_CONTROL, (uint8)MAX_SPPED_CONTROL);
+  uint8 u_controlSpeedRight = u_linearBoundedInterpolation(rightLDRlevel, 0u, 100, (uint8)MIN_SPPED_CONTROL, (uint8)MAX_SPPED_CONTROL);
+
+  ddr.setVelocities(u_controlSpeedLeft, u_controlSpeedRight);
+
+  MODE_current = MODE_3;
 }
 
 /**********************************************************
@@ -157,5 +228,56 @@ uint8 u_mapLigth2Degs(sint8 const s_error)
     float f_slope = (f_maxDegs - f_minDegs)/(f_maxError - f_minError);
     f_headDeg = f_slope * (f_error - f_minError) + f_minDegs;
     return (uint8)f_headDeg;
+  }
+}
+/**********************************************************
+*  Function u_linearBoundedInterpolation
+*
+*  Brief: Determines the output mapped from an input signal.
+*
+*       u_maxOutput .|              .......
+*                    |             /
+*                    |            /
+*                    |           /
+*       u_minOutput .|........../
+*                    |________________________________________
+*                               .  .
+*                      u_minInput   u_maxInput
+*
+*  Inputs: [uint8] u_minInput  : input signal
+*          [uint8] u_minDist   : min allowed input
+*          [uint8] u_maxInput  : max allowed input
+*          [uint8] u_minOutput : min allowed output
+*          [uint8] u_maxOutput : max allowed output
+*
+*  Outputs: [uint8] mapped output
+*
+*  Wire Inputs: None
+**********************************************************/
+uint8 u_linearBoundedInterpolation(uint8 const u_input  , 
+                                   uint8 const u_minInput, uint8 const u_maxInput, 
+                                   uint8 const u_minOutput , uint8 const u_maxOutput)
+{
+  if(u_input <= u_minInput)
+  {
+    return u_minOutput;
+  }
+  else if(u_input >= u_maxInput)
+  {
+    return u_maxOutput;
+  }
+  else
+  {
+    /* Convert to float all variables */
+    float f_input     = (float)u_input;
+    float f_minInput  = (float)u_minInput;
+    float f_maxInput  = (float)u_maxInput;
+    float f_minOutput = (float)u_minOutput;
+    float f_maxOutput = (float)u_maxOutput;
+    float f_output;
+
+    float f_slope = (f_maxOutput - f_minOutput)/(f_maxInput - f_minInput);
+    f_output = f_slope * (f_input - f_minInput) + f_minOutput;
+    return (uint8)f_output;
   }
 }
