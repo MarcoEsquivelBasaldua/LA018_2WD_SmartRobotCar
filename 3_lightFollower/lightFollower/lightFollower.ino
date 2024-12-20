@@ -38,13 +38,15 @@ DDR2 ddr(LEFTWHEEL, RIGHTWHEEL);
 volatile uint8 leftLDRlevel;
 volatile uint8 rightLDRlevel;
 volatile sint8 lightError;
+const    uint8 fullLight = 10u;  // Full light is obtain by lower this value inclusive 
+const    uint8 minErrorLight = 3;
 
 void setup()
 {
   OP_MODE_0();
   headingServo.setHeading(90u);
   delay(500);
-  Serial.begin(9600);
+  //Serial.begin(9600);
 }
 
 void loop()
@@ -53,6 +55,7 @@ void loop()
   leftLDRlevel = u_mapLight2Percentage(analogRead(0));
   rightLDRlevel = u_mapLight2Percentage(analogRead(1));
   lightError = rightLDRlevel - leftLDRlevel;
+  uint8 abs_lightError = u_abs((sint16)lightError);
 
   /* Set heading of the robot */
   heading = u_mapLigth2Degs(lightError);
@@ -60,9 +63,22 @@ void loop()
   headingServo.setHeading((uint8)heading);
   prevHeading = heading;
 
-  //OP_MODE_3();
-  delay(10);
 
+  /* Choose correct operational mode */
+  if ( (leftLDRlevel <= fullLight) && (rightLDRlevel <= fullLight) )
+  {
+    OP_MODE_0();
+  }
+  else if(abs_lightError <=  minErrorLight)
+  {
+    OP_MODE_1();
+  }
+  else
+  {
+    OP_MODE_3();
+  }
+
+  delay(10);
 }
 
 /**********************************************************
