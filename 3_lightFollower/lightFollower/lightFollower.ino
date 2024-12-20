@@ -38,7 +38,7 @@ DDR2 ddr(LEFTWHEEL, RIGHTWHEEL);
 volatile uint8 leftLDRlevel;
 volatile uint8 rightLDRlevel;
 volatile sint8 lightError;
-const    uint8 fullLight = 10u;  // Full light is obtain by lower this value inclusive 
+const    uint8 fullLight = 15u;  // Full light is obtain by lower this value inclusive 
 const    uint8 minErrorLight = 3;
 
 void setup()
