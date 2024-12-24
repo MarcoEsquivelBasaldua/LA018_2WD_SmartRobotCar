@@ -32,7 +32,7 @@ Using the code provided at this project, you would need to wire your components 
 
 ## Libraries
 
-The libraries needed to run this project are listed below. They must be placed at *./distanceKeeper/src*.
+The libraries needed to run this project are listed below. They must be placed at [2_IR_controlled_ddr.ino](./2_IR_controlled_ddr/2_IR_controlled_ddr.ino).
 
 Need libraries:
 - typeDefs
