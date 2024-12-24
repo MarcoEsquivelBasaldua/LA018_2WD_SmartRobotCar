@@ -27,7 +27,7 @@ Finally, in any other case, OP_MODE_2 is set where each wheel spped is controlle
 ![Turning robot 1](./images/gif2_dark.gif)  ![Turning robot 2](./images/gif3_dark.gif)
 
 ## Wiring
-Using the code provided in this project, you would need to wire your components as in the simple diagram shown below. This diagram can be also found in the *lightFollower.ino* file.
+Using the code provided in this project, you would need to wire your components as in the simple diagram shown below. This diagram can be also found in the [lightFollower.ino](./lightFollower/lightFollower.ino) file.
 
 ![lightFollower wiring diagram](./images/lightFollowerWiring.png)
 
