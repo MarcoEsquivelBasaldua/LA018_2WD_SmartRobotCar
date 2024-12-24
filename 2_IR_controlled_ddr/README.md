@@ -1,19 +1,16 @@
 # IR Controlled DDR
 
 In this simple project, the IR receiver present in the LA018_2WD_SmartRobotCar kit is used along a remote control to command the robot motion at a constant speed in four manners:
-	- go forward
-	- go backward
-	- turn clockwise
-	- turn counter clockwise
+- go forward
+- go backward
+- turn clockwise
+- turn counter clockwise
 
 These motions can be appretiated on the next figures.
-![Going forward](./Images/IR_forward.gif) 
 
-![Going backward](./Images/IR_backward.gif)
+![Going forward](./Images/IR_forward.gif)  ![Going backward](./Images/IR_backward.gif)
 
-![Turn clockwise](./Images/IR_turnClockwise.gif) 
-
-![Turn counter clockwise](./Images/IR_turnCounterClockwise.gif)
+![Turn clockwise](./Images/IR_turnClockwise.gif)  ![Turn counter clockwise](./Images/IR_turnCounterClockwise.gif)
 
 Once more, no available IR libraries are used. An own library is used instead based on the project in this [link](https://github.com/mbabeysekera/advanced-arduino-ir-remote) by using the Arduino interrupt pin attached on pin 2 and the function [micros()](https://docs.arduino.cc/language-reference/en/functions/time/micros/).
 
@@ -38,6 +35,6 @@ Using the code provided at this project, you would need to wire your components 
 The libraries needed to run this project are listed below. They must be placed at *./distanceKeeper/src*.
 
 Need libraries:
-	- typeDefs
-	- DDR
-	- IRDecoder
+- typeDefs
+- DDR
+- IRDecoder
