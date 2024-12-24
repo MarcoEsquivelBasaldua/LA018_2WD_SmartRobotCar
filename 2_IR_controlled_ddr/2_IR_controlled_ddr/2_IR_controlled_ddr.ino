@@ -65,8 +65,4 @@ void loop() {
         break;
     }
   }
-  else
-  {
-    ddr.stop();
-  }
 }
