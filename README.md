@@ -4,8 +4,8 @@ In this project I experiment over the [LA018WD Smart Robot Car Kit V1](https://l
 The project is separated over a total of 5 implementations that can be found in the folders and that are listed below.
 * Distance Keeper
 * IR Controlled Car
-* Bluetooth Controlled Car
 * Light Controlled Car
+* Bluetooth Controlled Car
 * Obstacle Avoidance Car.
 
 It is worth mentioning that none of the codes in the LAFVIN tutorials is being used. However, the tutorial and code can be found in this [link](https://www.dropbox.com/sh/a9449isour59wxb/AAC0MyeXVrMPYCr38tk-wpcca/Code?dl=0&subfolder_nav_tracking=1).
