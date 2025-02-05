@@ -5,11 +5,11 @@
 /**************************************************************************************
 *  Wiring
 *    _____________      ________________      __________________      _____________
-*   |            G|<---|GND           5V|--->|ENA           OUT1|--->|             |
-*   |  IR        R|<---|5V            11|--->|IN1               |    | RIGHT WHEEL |
-*   | RECEIVER   Y|--->| 2   ARDUINO  10|--->|IN2   L298N   OUT2|--->|_____________|
-*   |_____________|    |       UNO     9|--->|IN3               |     _____________
-*                      |               6|--->|IN4           OUT3|--->|             |
+*   |          VCC|<---|GND           5V|--->|ENA           OUT1|--->|             |
+*   |          GND|<---|5V            11|--->|IN1               |    | RIGHT WHEEL |
+*   |  HC-06    Tx|--->|Rx   ARDUINO  10|--->|IN2   L298N   OUT2|--->|_____________|
+*   |           Rx|<---|Tx     UNO     9|--->|IN3               |     _____________
+*   |_____________|    |               6|--->|IN4           OUT3|--->|             |
 *                      |              5V|--->|ENB               |    | LEFT WHEEL  |
 *                      |________________|    |              OUT4|--->|_____________|
 *                                            |      JUMPER      |
@@ -29,21 +29,17 @@ Wheel RIGHTWHEEL = {u_ins[2u], u_ins[3u]};
 DDR ddr(LEFTWHEEL, RIGHTWHEEL);
 //////////////////////////////////////////
 
-//---------------- IR ------------------//
-uint8 u_datPin = 2u;
-
-IRDecoder IR(u_datPin);
-//////////////////////////////////////////
-
 void setup() {
+  Serial.begin(9600);
   ddr.stop();
 }
 
 void loop() {
-  uint32 u_command = IR.getCommand();
 
-  if (u_command) {
-    switch (u_command)
+  if (Serial.available()) {
+    char c_command = Serial.read();
+
+    switch (c_command)
     {
       case IR_STOP:
         ddr.stop();
