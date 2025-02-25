@@ -1,6 +1,5 @@
 #include "src/typeDefs/typeDefs.h"
 #include "src/DDR/DDR.h"
-#include "src/IRDecoder/IRDecoder.h"
 
 /**************************************************************************************
 *  Wiring
