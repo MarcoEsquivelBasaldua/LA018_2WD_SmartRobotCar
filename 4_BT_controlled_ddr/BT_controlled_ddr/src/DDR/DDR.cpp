@@ -33,6 +33,57 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 }
 
 /**********************************************************
+*  Function DDR::setWheelsSpeed()
+*
+*  Brief: Set each ddr wheel to desired speed
+*
+*  Inputs: [sint16] leftVel: left wheel velocity control on the PWM cycle-duty range [-255, 255]
+*          [sint16] rightVel: right wheel velocity control on the PWM cycle-duty range [-255, 255]
+*
+*  Outputs: void
+*
+*  Wire Inputs: None
+*
+*  Wire Outputs: right wheel IN1 to vel
+*                right wheel IN2 to 0
+*                left wheel  IN1 to vel
+*                left wheel IN2 to 0
+**********************************************************/
+void DDR::setWheelsSpeed(sint16 const leftVel, sint16 const rightVel)
+{
+	/* Left Wheel */
+	uint8 abs_leftVel = u_abs_16to8(leftVel);
+
+	if (leftVel >= 0)
+	{
+		analogWrite(leftWheel.u_in1, abs_leftVel);
+ 		analogWrite(leftWheel.u_in2, STOP_RPM );
+	}
+	else
+	{
+		analogWrite(leftWheel.u_in1, STOP_RPM);
+ 		analogWrite(leftWheel.u_in2, abs_leftVel);
+	}
+
+	/* Right Wheel */
+	// Get vel offset for right wheel
+	uint8 abs_rightVel = u_abs_16to8(rightVel);
+	uint8 u_velOffset = getVelOffset(abs_rightVel);
+
+	if (rightVel >= 0)
+	{
+		analogWrite(rightWheel.u_in1, abs_rightVel + 2*u_velOffset);
+ 		analogWrite(rightWheel.u_in2, STOP_RPM);
+	}
+	else
+	{
+		analogWrite(rightWheel.u_in1, STOP_RPM);
+ 		analogWrite(rightWheel.u_in2, abs_rightVel + 2*u_velOffset);
+	}
+
+}
+
+/**********************************************************
 *  Function DDR::forward()
 *
 *  Brief: DDR wheels are set to move forward
@@ -268,4 +319,29 @@ uint8 getVelOffset(uint8 u_vel)
 	}
 
 	return u_offset;
+}
+
+/**********************************************************
+*  Function u_abs_16to8()
+*
+*  Brief: Get absolute value from sint16 value and cast it into uint8
+*
+*  Inputs: [sint16] inVal : input value
+*
+*  Outputs: [uint8] outVal : output value
+**********************************************************/
+uint8 u_abs_16to8(sint16 const inVal)
+{
+	uint8 outVal;
+
+	if (inVal >= 0)
+	{
+		outVal = uint8(inVal);
+	}
+	else
+	{
+		outVal = uint8(-inVal);
+	}
+
+	return outVal;
 }

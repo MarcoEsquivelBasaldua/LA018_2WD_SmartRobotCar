@@ -24,6 +24,7 @@
 #define  OUTDOOR_SPEED_CONTROL  (100u)                   /* Desired control for outdoor usage                        */
 #define  MAX_SPPED_CONTROL      (255u - TOP_VEL_OFFSET)  /* Maximum allowed wheel output (full PWM)                  */
 #define  ONE_F                  (1.0f)                   /* Constant 1 float                                         */
+#define  THREE_QUARTERS         (0.75f)                  /* Constant 0.75 float                                      */
 
 #define  MAX(x,y)           ( ((x)>(y)) ? (x) : (y) )  /* Max function macro */
 #define  MIN(x,y)           ( ((x)<(y)) ? (x) : (y) )  /* Min function macro */
@@ -39,6 +40,7 @@ class DDR
 {
 	public:
 		DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL);
+		void setWheelsSpeed(sint16 const leftVel, sint16 const rightVel);
 		void forward(uint8 const vel);
 		void backward(uint8 const vel);
 		void turnRight(uint8 const vel);
@@ -54,5 +56,6 @@ class DDR
 };
 
 uint8 getVelOffset(uint8 vel);
+uint8 u_abs_16to8(sint16 const inVal);
 
 #endif
