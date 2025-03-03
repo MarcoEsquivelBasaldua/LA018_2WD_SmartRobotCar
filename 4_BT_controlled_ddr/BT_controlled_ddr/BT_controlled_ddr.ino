@@ -1,13 +1,15 @@
 #include "src/typeDefs/typeDefs.h"
+#include "src/BT_encodedData/BT_encodedData.h"
 #include "src/DDR/DDR.h"
 
 /**************************************************************************************
 *  Wiring
-*    _____________      ________________      __________________      _____________
+*                       ________________ 
+*    _____________     |                |     __________________      _____________
 *   |          VCC|<---|GND           5V|--->|ENA           OUT1|--->|             |
-*   |          GND|<---|5V            11|--->|IN1               |    | RIGHT WHEEL |
-*   |  HC-06    Tx|--->|Rx   ARDUINO  10|--->|IN2   L298N   OUT2|--->|_____________|
-*   |           Rx|<---|Tx     UNO     9|--->|IN3               |     _____________
+*   |          GND|<---|5V  ARDUINO   11|--->|IN1               |    | RIGHT WHEEL |
+*   |  HC-06    Tx|--->|Rx    UNO     10|--->|IN2   L298N   OUT2|--->|_____________|
+*   |           Rx|<---|Tx             9|--->|IN3               |     _____________
 *   |_____________|    |               6|--->|IN4           OUT3|--->|             |
 *                      |              5V|--->|ENB               |    | LEFT WHEEL  |
 *                      |________________|    |              OUT4|--->|_____________|
@@ -40,20 +42,32 @@ void loop() {
 
     switch (c_command)
     {
-      case IR_STOP:
+      case BT_STOP:
         ddr.stop();
         break;
-      case IR_FORWARD:
+      case BT_FORWARD:
         ddr.forward(OUTDOOR_SPEED_CONTROL);
         break;
-      case IR_BACKWARD:
+      case BT_BACKWARD:
         ddr.backward(OUTDOOR_SPEED_CONTROL);
         break;
-      case IR_TURNLEFT:
+      case BT_LEFT:
         ddr.turnLeft(OUTDOOR_SPEED_CONTROL);
         break;
-      case IR_TURNRIGHT:
+      case BT_RIGHT:
         ddr.turnRight(OUTDOOR_SPEED_CONTROL);
+        break;
+      case BT_FORWARD_LEFT:
+        ddr.setWheelsSpeed((uint16)(THREE_QUARTERS * OUTDOOR_SPEED_CONTROL), (uint16)OUTDOOR_SPEED_CONTROL);
+        break;
+      case BT_FORWARD_RIGHT:
+        ddr.setWheelsSpeed((uint16)OUTDOOR_SPEED_CONTROL, (uint16)(THREE_QUARTERS * OUTDOOR_SPEED_CONTROL));
+        break;
+      case BT_BACKWARD_RIGHT:
+        ddr.setWheelsSpeed(-(uint16)(OUTDOOR_SPEED_CONTROL), -(uint16)(THREE_QUARTERS * OUTDOOR_SPEED_CONTROL));
+        break;
+      case BT_BACKWARD_LEFT:
+        ddr.setWheelsSpeed(-(uint16)(THREE_QUARTERS * OUTDOOR_SPEED_CONTROL), -(uint16)(OUTDOOR_SPEED_CONTROL));
         break;
       default:
         ddr.stop();
