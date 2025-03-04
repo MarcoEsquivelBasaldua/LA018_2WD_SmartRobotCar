@@ -1,4 +1,5 @@
 # BT Controlled DDR
+![BT controlled DDR](./images/BT_controlled.gif)
 
 In this simple project, I use a BT receiver (which is not present in the LA018_2WD_SmartRobotCar kit) used along with the Bluetooino app (available in the Play store for Android) to command the robot motion at a constant speed according to the controls in the image.
 
