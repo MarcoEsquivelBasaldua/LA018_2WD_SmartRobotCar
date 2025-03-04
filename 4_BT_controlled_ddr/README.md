@@ -15,7 +15,7 @@ Wire the components according to the next diagram.
 
 In my case, I am using the arrow and OK keys on my remote which decode according to the image below.
 
-![Used keys decoding](./Images/appControlsDecoded.png)
+![Used keys decoding](./images/appControlsDecoded.png)
 
 These values are then used on the [BT_controlled_ddr](./BT_controlled_ddr/) folder in an intuitive manner to make the robot move.
 
@@ -23,7 +23,7 @@ These values are then used on the [BT_controlled_ddr](./BT_controlled_ddr/) fold
 
 Using the code provided at this project, you would need to wire your components as in the simple diagram shown below. This diagram can be also found in the [BT_controlled_ddr.ino](./BT_controlled_ddr/BT_controlled_ddr.ino) file.
 
-![IR controlled ddr wiring](./Images/BT_decoder_wiring.png)
+![IR controlled ddr wiring](./images/BT_decoder_wiring.png)
 
 ## Libraries
 
