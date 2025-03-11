@@ -14,6 +14,7 @@
 
 #include "Arduino.h"
 #include "../typeDefs/typeDefs.h"
+#include "../commonAlgo/commonAlgo.h"
 
 /******************* DEFINES *********************/
 #define  TOP_VEL_OFFSET         (  1u)
