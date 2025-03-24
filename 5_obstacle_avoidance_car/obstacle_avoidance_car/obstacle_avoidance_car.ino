@@ -11,8 +11,13 @@
 #define CENTER_DEGS     (90u)
 #define MAX_DEGS        (180u)
 #define SAFETY_DISTANCE (15u)
+#define TURNING_TIME    (250)
 
 #define ONE_DEG_DELAY   (5u)
+//////////////////////////////////////////
+
+//----------------- Enums ----------------//
+enum lookDirection {FRONT, RIGHT, LEFT};
 //////////////////////////////////////////
 
 //----------------- DDR ----------------//
@@ -48,6 +53,23 @@ void setup() {
 }
 
 void loop() {
+  ObstacleAvoidance();
+}
+
+/**********************************************************
+*  Function ObstacleAvoidance
+*
+*  Brief: Main function for obstacle avoidance functionality
+*
+*  Inputs: None
+*
+*  Outputs: None
+*
+*  Callsequence:
+*
+**********************************************************/
+void ObstacleAvoidance()
+{
   /* Robot going forward */
   ddr.forward(INDOOR_SPEED_CONTROL);
 
@@ -56,33 +78,18 @@ void loop() {
 
   if (u_distance < SAFETY_DISTANCE)
   {
-    float f_meanDist2ObstaclesRight = 0.0f,
-          f_meanDist2ObstaclesLeft = 0.0f;
+    float f_meanDist2ObstaclesRight, f_meanDist2ObstaclesLeft;
     ddr.stop();
 
     /* Look to the right */
-    for (uint8 u_heading = CENTER_DEGS, counter = 1u; 
-         u_heading > MIN_SERVO_DEGREES; 
-         u_heading--, counter++)
-    {
-      headingServo.setHeading(u_heading);
-      delay(ONE_DEG_DELAY);
-      f_meanDist2ObstaclesRight = ((float)(counter - 1u) * (f_meanDist2ObstaclesRight) + (float)distSensor.measureDistance()) / (float)counter;
-    }
+    f_meanDist2ObstaclesRight = getMeanFreeSpace(RIGHT);
 
     /* Get heading back to middle */
     headingServo.setHeading(CENTER_DEGS);
     delay(500);
 
     /* Look to the left */
-    for (uint8 u_heading = CENTER_DEGS, counter = 1u;
-         u_heading < MAX_SERVO_DEGREES; 
-         u_heading++, counter++)
-    {
-      headingServo.setHeading(u_heading);
-      delay(ONE_DEG_DELAY);
-      f_meanDist2ObstaclesLeft = ((float)(counter - 1u) * (f_meanDist2ObstaclesLeft) + (float)distSensor.measureDistance()) / (float)counter;
-    }
+    f_meanDist2ObstaclesLeft = getMeanFreeSpace(LEFT);
 
     /* Get heading back to middle */
     headingServo.setHeading(CENTER_DEGS);
@@ -92,13 +99,49 @@ void loop() {
     if (f_meanDist2ObstaclesRight > f_meanDist2ObstaclesLeft)
     {
       ddr.turnRightFast(INDOOR_SPEED_CONTROL);
-      delay(500);
+      delay(TURNING_TIME);
     }
     else
     {
       ddr.turnLeftFast(INDOOR_SPEED_CONTROL);
-      delay(500);
+      delay(TURNING_TIME);
     }
   }
+}
 
+/**********************************************************
+*  Function getMeanFreeSpace
+*
+*  Brief: Get mean distances to obstacles in the given direction
+*
+*  Inputs: [lookDirection] direction : RIGHT or LEFT
+*
+*  Outputs: [float] : mean distance to obstacles
+*
+*  Callsequence:
+*         start
+*           : init mean value with 0;
+*           : check which direction to check;
+*           : repeat
+*             : move heading angle;
+*             : update mean value with measured distance;
+*           : repeat (unit reaching side direction)
+*           : return mean distances;
+*         end
+**********************************************************/
+float getMeanFreeSpace(lookDirection direction)
+{
+  float f_meanDist2Obstacles = 0.0f;
+  sint8 s_headingIncrement = (direction == LEFT) ? (1) : (-1); 
+
+  for (uint8 u_heading = CENTER_DEGS, counter = 1u; 
+       u_heading > MIN_SERVO_DEGREES && u_heading < MAX_SERVO_DEGREES; 
+       u_heading += s_headingIncrement, counter++)
+  {
+    headingServo.setHeading(u_heading);
+    delay(ONE_DEG_DELAY);
+    f_meanDist2Obstacles = ((float)(counter - 1u) * (f_meanDist2Obstacles) + (float)distSensor.measureDistance()) / (float)counter;
+  }
+
+  return f_meanDist2Obstacles;
 }
