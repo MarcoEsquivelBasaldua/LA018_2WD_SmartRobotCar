@@ -320,28 +320,3 @@ uint8 getVelOffset(uint8 u_vel)
 
 	return u_offset;
 }
-
-/**********************************************************
-*  Function u_abs_16to8()
-*
-*  Brief: Get absolute value from sint16 value and cast it into uint8
-*
-*  Inputs: [sint16] inVal : input value
-*
-*  Outputs: [uint8] outVal : output value
-**********************************************************/
-uint8 u_abs_16to8(sint16 const inVal)
-{
-	uint8 outVal;
-
-	if (inVal >= 0)
-	{
-		outVal = uint8(inVal);
-	}
-	else
-	{
-		outVal = uint8(-inVal);
-	}
-
-	return outVal;
-}

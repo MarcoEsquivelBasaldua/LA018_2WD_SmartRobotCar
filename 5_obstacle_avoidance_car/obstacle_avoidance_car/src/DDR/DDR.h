@@ -54,6 +54,5 @@ class DDR
 };
 
 uint8 getVelOffset(uint8 vel);
-uint8 u_abs_16to8(sint16 const inVal);
 
 #endif

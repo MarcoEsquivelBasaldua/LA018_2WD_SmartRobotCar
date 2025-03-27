@@ -1,6 +1,8 @@
 #ifndef typeDefs_H
 #define typeDefs_H
 
+#include <stdint.h>
+
 /* unsigned int types */
 typedef uint8_t  uint8;
 typedef uint16_t uint16;
