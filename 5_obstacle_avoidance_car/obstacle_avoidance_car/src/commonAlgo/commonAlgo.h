@@ -18,4 +18,6 @@
 
 uint8 u_abs_16to8(sint16 const inVal);
 
+float32 f_abs_floatTofloat(float32 const inVal);
+
 #endif

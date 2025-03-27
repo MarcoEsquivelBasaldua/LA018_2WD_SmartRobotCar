@@ -12,8 +12,11 @@
 #define MAX_DEGS        (180u)
 #define SAFETY_DISTANCE (15u)
 #define TURNING_TIME    (250)
+#define BACKWARD_TIME   (500)
 
 #define ONE_DEG_DELAY   (5u)
+
+#define STUCKED_BETWEEN_OBS_TH (5.0f)
 //////////////////////////////////////////
 
 //----------------- Enums ----------------//
@@ -96,7 +99,14 @@ void ObstacleAvoidance()
     delay(500);
 
     /* Change direction due to obstacle */
-    if (f_meanDist2ObstaclesRight > f_meanDist2ObstaclesLeft)
+    if (f_abs_floatTofloat(f_meanDist2ObstaclesRight - f_meanDist2ObstaclesLeft) <= STUCKED_BETWEEN_OBS_TH)
+    {
+      ddr.backward(INDOOR_SPEED_CONTROL);
+      delay(BACKWARD_TIME);
+      ddr.turnRightFast(INDOOR_SPEED_CONTROL);
+      delay(TURNING_TIME);
+    }
+    else if (f_meanDist2ObstaclesRight > f_meanDist2ObstaclesLeft)
     {
       ddr.turnRightFast(INDOOR_SPEED_CONTROL);
       delay(TURNING_TIME);
