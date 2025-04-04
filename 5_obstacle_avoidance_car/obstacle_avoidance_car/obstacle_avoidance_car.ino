@@ -11,7 +11,7 @@
 #define CENTER_DEGS     (90u)
 #define MAX_DEGS        (180u)
 #define SAFETY_DISTANCE (15u)
-#define TURNING_TIME    (250)
+#define TURNING_TIME    (500)
 #define BACKWARD_TIME   (500)
 
 #define ONE_DEG_DELAY   (5u)
@@ -134,8 +134,7 @@ void loop() {
   }
   else if (curr_opMode == BT_COMMANDED)
   {
-    //blueToothCommand(bt_command);
-    blueToothCommand(BT_FORWARD);
+    blueToothCommand(bt_command);
   }
   else if (curr_opMode == STAND_BY)
   {
@@ -145,10 +144,6 @@ void loop() {
   {
     /* Do nothing*/
   }
-
-
-  
-
   
 }
 

@@ -21,9 +21,9 @@
 #define BT_BACKWARD_LEFT   (57u)
 
 #define BT_A  (101u)
-#define BT_B  (991u)
+#define BT_B  (99u)
 #define BT_C  (103u)
-#define BT_D  (973u)
+#define BT_D  (97u)
 
 #define BT_NO_DATA (53u)
 
