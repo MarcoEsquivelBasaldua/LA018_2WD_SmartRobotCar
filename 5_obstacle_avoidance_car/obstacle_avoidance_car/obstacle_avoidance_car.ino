@@ -43,20 +43,113 @@ volatile uint8 u_distance;
 //----------- Servo Heading ------------//
 myServo headingServo(SERVO_PIN);
 
-volatile uint8  u_prevHeading = 90u;
 volatile sint16 u_heading;
-const    float  lpfFactor = 0.25f;
 //////////////////////////////////////////
 
+//--------- Operational Modes ----------//
+enum op_Modes{STAND_BY, OBSTACLE_AVOIDANCE, BT_COMMANDED};
+op_Modes curr_opMode;
+//////////////////////////////////////////
+
+char bt_command = BT_STOP;
 
 void setup() {
+  /* INnit operational Mode */
+  curr_opMode = STAND_BY;
+
+  /* Robot Motion init */
   ddr.stop();
   headingServo.setHeading(CENTER_DEGS);
   delay(500);
+
+  /* BT init */
+  Serial.begin(9600);
 }
 
 void loop() {
-  ObstacleAvoidance();
+
+  if (Serial.available()) 
+  {
+    char c_command = Serial.read();
+    
+    /* Obstacle Ovoidance enabled */
+    if (c_command == BT_A)
+    {
+      curr_opMode = OBSTACLE_AVOIDANCE;
+    }
+    else if (c_command == BT_B)
+    {
+      curr_opMode = BT_COMMANDED;
+    }
+    else if (c_command == BT_C)
+    {
+      curr_opMode = STAND_BY;
+    }
+    else if (c_command == BT_FORWARD)
+    {
+      bt_command = BT_FORWARD;
+    }
+    else
+    {
+      switch (c_command)
+      {
+        case BT_STOP:
+          bt_command = BT_STOP;
+          break;
+        case BT_FORWARD:
+          bt_command = BT_FORWARD;
+          break;
+        case BT_BACKWARD:
+          bt_command = BT_BACKWARD;
+          break;
+        case BT_LEFT:
+          bt_command = BT_LEFT;
+          break;
+        case BT_RIGHT:
+          bt_command = BT_RIGHT;
+          break;
+        case BT_FORWARD_LEFT:
+          bt_command = BT_FORWARD_LEFT;
+          break;
+        case BT_FORWARD_RIGHT:
+          bt_command = BT_FORWARD_RIGHT;
+          break;
+        case BT_BACKWARD_RIGHT:
+          bt_command = BT_BACKWARD_RIGHT;
+          break;
+        case BT_BACKWARD_LEFT:
+          bt_command = BT_BACKWARD_LEFT;
+          break;
+        default:
+          bt_command = BT_STOP;
+          break;
+      }
+    }
+  }
+
+
+  if (curr_opMode == OBSTACLE_AVOIDANCE)
+  {
+    ObstacleAvoidance();
+  }
+  else if (curr_opMode == BT_COMMANDED)
+  {
+    //blueToothCommand(bt_command);
+    blueToothCommand(BT_FORWARD);
+  }
+  else if (curr_opMode == STAND_BY)
+  {
+    ddr.stop();
+  }
+  else
+  {
+    /* Do nothing*/
+  }
+
+
+  
+
+  
 }
 
 /**********************************************************
@@ -154,4 +247,41 @@ float getMeanFreeSpace(lookDirection direction)
   }
 
   return f_meanDist2Obstacles;
+}
+
+void blueToothCommand(char c_command)
+{
+  switch (c_command)
+  {
+    case BT_STOP:
+      ddr.stop();
+      break;
+    case BT_FORWARD:
+      ddr.forward(OUTDOOR_SPEED_CONTROL);
+      break;
+    case BT_BACKWARD:
+      ddr.backward(OUTDOOR_SPEED_CONTROL);
+      break;
+    case BT_LEFT:
+      ddr.turnLeft(OUTDOOR_SPEED_CONTROL);
+      break;
+    case BT_RIGHT:
+      ddr.turnRight(OUTDOOR_SPEED_CONTROL);
+      break;
+    case BT_FORWARD_LEFT:
+      ddr.setWheelsSpeed((uint16)(THREE_QUARTERS * OUTDOOR_SPEED_CONTROL), (uint16)OUTDOOR_SPEED_CONTROL);
+      break;
+    case BT_FORWARD_RIGHT:
+      ddr.setWheelsSpeed((uint16)OUTDOOR_SPEED_CONTROL, (uint16)(THREE_QUARTERS * OUTDOOR_SPEED_CONTROL));
+      break;
+    case BT_BACKWARD_RIGHT:
+      ddr.setWheelsSpeed(-(uint16)(OUTDOOR_SPEED_CONTROL), -(uint16)(THREE_QUARTERS * OUTDOOR_SPEED_CONTROL));
+      break;
+    case BT_BACKWARD_LEFT:
+      ddr.setWheelsSpeed(-(uint16)(THREE_QUARTERS * OUTDOOR_SPEED_CONTROL), -(uint16)(OUTDOOR_SPEED_CONTROL));
+      break;
+    default:
+      ddr.stop();
+      break;
+  }
 }
