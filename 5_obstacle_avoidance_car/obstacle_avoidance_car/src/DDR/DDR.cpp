@@ -11,6 +11,9 @@
 ******************************************************************************/
 #include "DDR.h"
 
+uint8 leftVelObsCompensation;
+uint8 rightVelObsCompensation;
+
 DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 {
 	/* Set Left Wheel outputs */
@@ -26,6 +29,19 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 	analogWrite(LEFTWHEEL.u_in2 , STOP_RPM);
 	analogWrite(RIGHTWHEEL.u_in1, STOP_RPM);
 	analogWrite(RIGHTWHEEL.u_in2, STOP_RPM);
+
+	/* Init Vel compensations */
+	leftVelObsCompensation  = 0u;
+	rightVelObsCompensation = 0u;
+
+	/* Use interrupts on Vel compensation */
+	pinMode(LEFT_IR_SENSOR , INPUT_PULLUP);
+	pinMode(RIGHT_IR_SENSOR, INPUT_PULLUP);
+
+	attachInterrupt(digitalPinToInterrupt(LEFT_IR_SENSOR) , setLeftVelObsCompensation   , FALLING);
+	attachInterrupt(digitalPinToInterrupt(RIGHT_IR_SENSOR), setRightVelObsCompensation  , FALLING);
+	attachInterrupt(digitalPinToInterrupt(LEFT_IR_SENSOR) , resetLeftVelObsCompensation , RISING );
+	attachInterrupt(digitalPinToInterrupt(RIGHT_IR_SENSOR), resetRightVelObsCompensation, RISING );
 
 	/* Attach wheels to DDR */
 	leftWheel  = LEFTWHEEL;
@@ -56,7 +72,7 @@ void DDR::setWheelsSpeed(sint16 const leftVel, sint16 const rightVel)
 
 	if (leftVel >= 0)
 	{
-		analogWrite(leftWheel.u_in1, abs_leftVel);
+		analogWrite(leftWheel.u_in1, abs_leftVel + leftVelObsCompensation);
  		analogWrite(leftWheel.u_in2, STOP_RPM );
 	}
 	else
@@ -72,7 +88,7 @@ void DDR::setWheelsSpeed(sint16 const leftVel, sint16 const rightVel)
 
 	if (rightVel >= 0)
 	{
-		analogWrite(rightWheel.u_in1, abs_rightVel + 2*u_velOffset);
+		analogWrite(rightWheel.u_in1, abs_rightVel + 2*u_velOffset + rightVelObsCompensation);
  		analogWrite(rightWheel.u_in2, STOP_RPM);
 	}
 	else
@@ -268,4 +284,24 @@ uint8 getVelOffset(uint8 u_vel)
 	}
 
 	return u_offset;
+}
+
+void resetLeftVelObsCompensation()
+{
+	leftVelObsCompensation = 0u;
+}
+
+void resetRightVelObsCompensation()
+{
+	rightVelObsCompensation = 0u;
+}
+
+void setLeftVelObsCompensation()
+{
+	leftVelObsCompensation = LEFT_VEL_COMP;
+}
+
+void setRightVelObsCompensation()
+{
+	rightVelObsCompensation = RIGHT_VEL_COMP;
 }
