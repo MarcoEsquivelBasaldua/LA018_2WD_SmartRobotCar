@@ -11,8 +11,8 @@
 ******************************************************************************/
 #include "DDR.h"
 
-uint8 leftVelObsCompensation;
-uint8 rightVelObsCompensation;
+volatile uint8 leftVelObsComp;
+volatile uint8 rightVelObsComp;
 
 DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 {
@@ -30,18 +30,13 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 	analogWrite(RIGHTWHEEL.u_in1, STOP_RPM);
 	analogWrite(RIGHTWHEEL.u_in2, STOP_RPM);
 
+	/* IR sensors */
+	pinMode(LEFT_IR_SENSOR , INPUT);
+	pinMode(RIGHT_IR_SENSOR, INPUT);
+
 	/* Init Vel compensations */
-	leftVelObsCompensation  = 0u;
-	rightVelObsCompensation = 0u;
-
-	/* Use interrupts on Vel compensation */
-	pinMode(LEFT_IR_SENSOR , INPUT_PULLUP);
-	pinMode(RIGHT_IR_SENSOR, INPUT_PULLUP);
-
-	attachInterrupt(digitalPinToInterrupt(LEFT_IR_SENSOR) , setLeftVelObsCompensation   , FALLING);
-	attachInterrupt(digitalPinToInterrupt(RIGHT_IR_SENSOR), setRightVelObsCompensation  , FALLING);
-	attachInterrupt(digitalPinToInterrupt(LEFT_IR_SENSOR) , resetLeftVelObsCompensation , RISING );
-	attachInterrupt(digitalPinToInterrupt(RIGHT_IR_SENSOR), resetRightVelObsCompensation, RISING );
+	leftVelObsComp  = 0u;
+	rightVelObsComp = 0u;
 
 	/* Attach wheels to DDR */
 	leftWheel  = LEFTWHEEL;
@@ -67,12 +62,16 @@ DDR::DDR(Wheel const LEFTWHEEL, Wheel const RIGHTWHEEL)
 **********************************************************/
 void DDR::setWheelsSpeed(sint16 const leftVel, sint16 const rightVel)
 {
+	/* Compensate velocity if IR sensors are set */
+	leftVelObsComp = (digitalRead(LEFT_IR_SENSOR) == HIGH) ? 0u : LEFT_VEL_COMP;
+	rightVelObsComp = (digitalRead(RIGHT_IR_SENSOR) == HIGH) ? 0u : RIGHT_VEL_COMP;
+	
 	/* Left Wheel */
 	uint8 abs_leftVel = u_abs_16to8(leftVel);
 
 	if (leftVel >= 0)
 	{
-		analogWrite(leftWheel.u_in1, abs_leftVel + leftVelObsCompensation);
+		analogWrite(leftWheel.u_in1, abs_leftVel + leftVelObsComp);
  		analogWrite(leftWheel.u_in2, STOP_RPM );
 	}
 	else
@@ -88,7 +87,7 @@ void DDR::setWheelsSpeed(sint16 const leftVel, sint16 const rightVel)
 
 	if (rightVel >= 0)
 	{
-		analogWrite(rightWheel.u_in1, abs_rightVel + 2*u_velOffset + rightVelObsCompensation);
+		analogWrite(rightWheel.u_in1, abs_rightVel + 2*u_velOffset + rightVelObsComp);
  		analogWrite(rightWheel.u_in2, STOP_RPM);
 	}
 	else
@@ -284,24 +283,4 @@ uint8 getVelOffset(uint8 u_vel)
 	}
 
 	return u_offset;
-}
-
-void resetLeftVelObsCompensation()
-{
-	leftVelObsCompensation = 0u;
-}
-
-void resetRightVelObsCompensation()
-{
-	rightVelObsCompensation = 0u;
-}
-
-void setLeftVelObsCompensation()
-{
-	leftVelObsCompensation = LEFT_VEL_COMP;
-}
-
-void setRightVelObsCompensation()
-{
-	rightVelObsCompensation = RIGHT_VEL_COMP;
 }

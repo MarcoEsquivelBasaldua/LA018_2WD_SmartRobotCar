@@ -28,8 +28,8 @@
 #define  THREE_QUARTERS         (0.75f)                  /* Constant 0.75 float                                      */
 #define  LEFT_IR_SENSOR         (3u)
 #define  RIGHT_IR_SENSOR        (2u)
-#define  LEFT_VEL_COMP          (50u)
-#define  RIGHT_VEL_COMP         (50u)
+#define  LEFT_VEL_COMP          (100u)
+#define  RIGHT_VEL_COMP         (100u)
 
 /*************************************************/
 
@@ -58,10 +58,5 @@ class DDR
 };
 
 uint8 getVelOffset(uint8 vel);
-
-void resetLeftVelObsCompensation();
-void resetRightVelObsCompensation();
-void setLeftVelObsCompensation();
-void setRightVelObsCompensation();
 
 #endif
