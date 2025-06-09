@@ -13,6 +13,7 @@
 ***************************************************************************************/
 
 LiquidCrystal_I2C lcd(0x27,16,2);  //
+uint8 c_command;
 
 void setup() {
   // Bluetooth will communicate by Serial
@@ -20,19 +21,22 @@ void setup() {
 
   lcd.init();
   lcd.backlight();
-  
-  lcd.print("Data received");
 }
 
 void loop() {
+  lcd.print("Data received");
+
   if (Serial.available())
   {
     // Read data received
-    uint8 c_command = Serial.read();
-
-    // Set cursor on second row
-    lcd.setCursor(0, 1);
-    // Show received data
-    lcd.print(c_command);
+    c_command = Serial.read();
   }
+
+  // Set cursor on second row
+  lcd.setCursor(0, 1);
+  // Show received data
+  lcd.print(c_command);
+
+  delay(100);
+  lcd.clear();
 }
