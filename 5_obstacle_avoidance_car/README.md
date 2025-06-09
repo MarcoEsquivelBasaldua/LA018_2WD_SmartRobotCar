@@ -8,7 +8,7 @@ To get to the BT controlloed mode, press the B button. For an self driving mode,
 
 ![App commands](./images/appControls.jpeg)
 
-## IR Sensors for side correctness
+## IR Sensors for side correction
 ![Side IR sensor 1](./images/sideIRSensor1.gif)
 ![Side IR sensor 2](./images/sideIRSensor2.gif)
 
