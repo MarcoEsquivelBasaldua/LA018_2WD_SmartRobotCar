@@ -17,7 +17,7 @@ The project is separated over a total of 5 implementations listed below.
 ## [Bluetooth Controlled Car](./4_BT_controlled_ddr/)
 ![Bluetooth Controlled Car](./4_BT_controlled_ddr/images/BT_controlled.gif)
 
-## [Obstacle Avoiding Car](./5_obstacle_avoiding_car/)
-![Obstacle Avoiding Car](./5_obstacle_avoiding_car/images/obstacle_avoidance_video1.gif)
+## [Obstacle Avoiding Car](./5_obstacle_avoidance_car/)
+![Obstacle Avoiding Car](./5_obstacle_avoidance_car/images/obstacle_avoidance_video1.gif)
 
 It is worth mentioning that none of the codes in the LAFVIN tutorials is being used. However, the tutorial and code can be found in this [link](https://www.dropbox.com/sh/a9449isour59wxb/AAC0MyeXVrMPYCr38tk-wpcca/Code?dl=0&subfolder_nav_tracking=1).
